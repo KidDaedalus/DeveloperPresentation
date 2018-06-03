@@ -10,8 +10,15 @@ buildscript {
 		classpath("org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.30")
     }
 }
-project.plugins.apply("kotlin2js")
-project.plugins.apply("org.jetbrains.kotlin.frontend")
+plugins.apply("org.jetbrains.kotlin.frontend")
+plugins.apply("kotlin2js")
+
+repositories {
+	jcenter()
+	maven {
+		url = java.net.URI("https://dl.bintray.com/kotlin/kotlin-eap")
+	}
+}
 
 val kotlinVersion = "1.2.41"
 
