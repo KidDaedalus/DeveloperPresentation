@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.frontend.npm.NpmExtension
+import org.jetbrains.kotlin.gradle.frontend.webpack.WebPackBundler
+
 buildscript {
 	repositories {
 		jcenter()
@@ -27,11 +30,25 @@ dependencies {
 	"compile" ("org.jetbrains.kotlinx:kotlinx-html-js:0.6.6")
 }
 
-// Seriously why is this still necessary with gradle-kotlin? Where's the codegen?
-val kotlinFrontend = extensions.getByType(org.jetbrains.kotlin.gradle.frontend.KotlinFrontendExtension::class.java)
-kotlinFrontend.apply {
+
+
+kotlinFrontend{
+    downloadNodeJsVersion = "8.11.2"
+
+    // In the groovy DSL this would just be "webpackBundle"
+    // Seems like the kotlinJs does some dynamic goofiness here
+    val webpackBundler = bundlers["webpack"] as WebPackBundler
+    val webPackExtension = webpackBundler.createConfig(project)
+    webPackExtension.apply {
+
+    }
 
 }
+
+npm {
+    devDependency("karma")
+}
+
 
 tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile::class.java) {
     kotlinOptions {
