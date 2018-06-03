@@ -2,7 +2,7 @@ buildscript {
 	repositories {
 		jcenter()
 		maven {
-            url = java.net.URI("https://dl.bintray.com/kotlin/kotlin-eap")
+            url = project.uri("https://dl.bintray.com/kotlin/kotlin-eap")
         }
 	}
     dependencies {
@@ -16,7 +16,7 @@ plugins.apply("kotlin2js")
 repositories {
 	jcenter()
 	maven {
-		url = java.net.URI("https://dl.bintray.com/kotlin/kotlin-eap")
+		url = project.uri("https://dl.bintray.com/kotlin/kotlin-eap")
 	}
 }
 
