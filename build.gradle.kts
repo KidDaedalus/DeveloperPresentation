@@ -1,5 +1,6 @@
-import org.jetbrains.kotlin.gradle.frontend.npm.NpmExtension
+import org.jetbrains.kotlin.gradle.frontend.config.BundleConfig
 import org.jetbrains.kotlin.gradle.frontend.webpack.WebPackBundler
+import org.jetbrains.kotlin.gradle.frontend.webpack.WebPackExtension
 
 buildscript {
 	repositories {
@@ -30,25 +31,25 @@ dependencies {
 	"compile" ("org.jetbrains.kotlinx:kotlinx-html-js:0.6.6")
 }
 
-
-
 kotlinFrontend{
     downloadNodeJsVersion = "8.11.2"
+    sourceMaps = true
 
     // In the groovy DSL this would just be "webpackBundle"
-    // Seems like the kotlinJs does some dynamic goofiness here
-    val webpackBundler = bundlers["webpack"] as WebPackBundler
-    val webPackExtension = webpackBundler.createConfig(project)
-    webPackExtension.apply {
-
+    // KotlinFrontendExtension overrides dynamic Groovy's missing method behavior to turn "[bundler]Bundle()"
+    // into an invocation to "bundle([bundler])" which is a real method
+    //
+    // So kind of like a poor-man's AST transformation
+    // Jetbrains, this is so unnecessary. Why did you make me spend time figuring this out just to write a kotlin buildscript
+    bundle<WebPackExtension>(WebPackBundler.bundlerId) {
+        val config = this as WebPackExtension
+        config.contentPath = project.file("src/main/web")
     }
-
 }
 
 npm {
     devDependency("karma")
 }
-
 
 tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile::class.java) {
     kotlinOptions {
