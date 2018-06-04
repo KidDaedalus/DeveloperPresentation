@@ -15,6 +15,7 @@ buildscript {
     }
 }
 plugins.apply(org.jetbrains.kotlin.gradle.frontend.FrontendPlugin::class.java)
+plugins.apply("kotlin-dce-js")
 plugins.apply(org.jetbrains.kotlin.gradle.plugin.Kotlin2JsPluginWrapper::class.java)
 
 repositories {
@@ -44,10 +45,12 @@ kotlinFrontend{
     bundle<WebPackExtension>(WebPackBundler.bundlerId) {
         val config = this as WebPackExtension
         config.contentPath = project.file("src/main/web")
+        config.mode = "development"
     }
 }
 
 npm {
+    dependency("two", "1.0.1")
     devDependency("karma")
 }
 
