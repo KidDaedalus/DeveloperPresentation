@@ -15,7 +15,7 @@ buildscript {
     }
 }
 plugins.apply(org.jetbrains.kotlin.gradle.frontend.FrontendPlugin::class.java)
-plugins.apply("kotlin-dce-js")
+//plugins.apply("kotlin-dce-js")
 plugins.apply(org.jetbrains.kotlin.gradle.plugin.Kotlin2JsPluginWrapper::class.java)
 
 repositories {
@@ -32,6 +32,12 @@ dependencies {
 	"compile" ("org.jetbrains.kotlinx:kotlinx-html-js:0.6.6")
 }
 
+
+npm {
+    dependency("two.js", "0.7.0-alpha.1")
+    devDependency("karma")
+}
+
 kotlinFrontend{
     downloadNodeJsVersion = "8.11.2"
     sourceMaps = true
@@ -43,20 +49,17 @@ kotlinFrontend{
     // So kind of like a poor-man's AST transformation
     // Jetbrains, this is so unnecessary. Why did you make me spend time figuring this out just to write a kotlin buildscript
     bundle<WebPackExtension>(WebPackBundler.bundlerId) {
-        val config = this as WebPackExtension
-        config.contentPath = project.file("src/main/web")
-        config.mode = "development"
-    }
-}
+        this as WebPackExtension
+        contentPath = project.file("src/main/web")
+        mode = "development"
 
-npm {
-    dependency("two", "1.0.1")
-    devDependency("karma")
+    }
+    define("PRODUCTION", false)
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile::class.java) {
     kotlinOptions {
         sourceMap = true
-        moduleKind = "umd"
+        moduleKind = "commonjs"
     }
 }
