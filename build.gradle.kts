@@ -15,7 +15,7 @@ buildscript {
     }
 }
 plugins.apply(org.jetbrains.kotlin.gradle.frontend.FrontendPlugin::class.java)
-//plugins.apply("kotlin-dce-js")
+plugins.apply("kotlin-dce-js")
 plugins.apply(org.jetbrains.kotlin.gradle.plugin.Kotlin2JsPluginWrapper::class.java)
 
 repositories {
@@ -54,7 +54,6 @@ kotlinFrontend{
         mode = "development"
 
     }
-    define("PRODUCTION", false)
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile::class.java) {
