@@ -16,12 +16,10 @@ fun main(vararg args: String) {
     })
     two.appendTo(drawShapes)
 
-    val circle = two.makeCircle(100, 100, 75).apply {
-        fill = "#FF8000"
-        stroke = "orangered"
-        linewidth = 5
-    }
+    val tableau = Tableau(500.0,500.0)
+    two.scene.add(tableau.allShapes)
 
+    //val plus = Two.Path(arrayOf(Two.Anchor()))
 
     two.update()
 }

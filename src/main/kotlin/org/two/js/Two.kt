@@ -18,22 +18,22 @@ open external class Two (params: TwoConstructionParams /* null */) {
     /**
      * A number representing how many frames have elapsed.
      */
-    open var frameCount: Number
+    open var frameCount: Double
 
     /**
      * A number representing how much time has elapsed since the last frame in milliseconds.
      */
-    open var timeDelta: Number
+    open var timeDelta: Double
 
     /**
      * The width of the instance's dom element.
      */
-    open var width: Number
+    open var width: Double
 
     /**
      * The height of the instance's dom element.
      */
-    open var height: Number
+    open var height: Double
 
     /**
      * A boolean representing whether or not the instance is being updated through the automatic requestAnimationFrame.
@@ -102,32 +102,32 @@ open external class Two (params: TwoConstructionParams /* null */) {
      * Draws a line between two coordinates to the instance's drawing space where x1, y1 are the x, y values for the
      * first coordinate and x2, y2 are the x, y values for the second coordinate. It returns a Two.Line object.
      */
-    fun makeLine(x1: Number, y1: Number, x2: Number, y2: Number): Line
+    fun makeLine(x1: Double, y1: Double, x2: Double, y2: Double): Line
 
     /**
      * Draws a rectangle to the instance's drawing space where x, y are the x, y values for the center point of the
      * rectangle and width, height represents the width and height of the rectangle. It returns a Two.Rectangle object.
      */
-    fun makeRectangle(x: Number, y: Number, width: Number, height: Number): Rectangle
+    fun makeRectangle(x: Double, y: Double, width: Double, height: Double): Rectangle
 
     /**
      * Draws a rounded rectangle to the instance's drawing space where x, y are the x, y values for the center point of
      * the rectangle and width, height represents the width and height of the rectangle. Lastly, the radius parameter
      * defines what the miter radius of the rounded corner is. It returns a Two.RoundedRectangle object.
      */
-    fun makeRoundedRectangle(x: Number, y: Number, width: Number, height: Number, radius: Number): RoundedRectangle
+    fun makeRoundedRectangle(x: Double, y: Double, width: Double, height: Double, radius: Double): RoundedRectangle
 
     /**
      *Draws a circle to the instance's drawing space where x, y are the x, y values for the center point of the circle
      * and radius is the radius of the circle. It returns a Two.Circle object.
      */
-    fun makeCircle(x: Number, y: Number, radius: Number): Circle
+    fun makeCircle(x: Double, y: Double, radius: Double): Circle
 
     /**
      * Draws an ellipse to the instance's drawing space where x, y are the x, y values for the center point of the
      * ellipse and width, height are the dimensions of the ellipse. It returns a Two.Ellipse object.
      */
-    fun makeEllipse(x: Number, y: Number, width: Number, height: Number): Ellipse
+    fun makeEllipse(x: Double, y: Double, width: Double, height: Double): Ellipse
 
     /**
      * Draws a star to the instance's drawing space where ox, oy are the x, y values for the center point of the star
@@ -135,13 +135,13 @@ open external class Two (params: TwoConstructionParams /* null */) {
      * It returns a Two.Star object.
      */
     //TODO: declare type bindings for Star
-    fun makeStart(ox:Number, oy:Number, or: Number, ir: Number, sides: Number): Star
+    fun makeStart(ox:Double, oy:Double, or: Double, ir: Double, sides: Long): Star
 
     /**
      * Draws a polygon to the instance's drawing space where ox, oy are the x, y values for the center of the polygon,
      * r is the radius, and sides are how many sides the polygon has. It returns a Two.Polygon object.
      */
-    fun makePolygon(x1: Number, y1: Number, x2: Number, y2: Number, open: Boolean): Polygon
+    fun makePolygon(x1: Double, y1: Double, x2: Double, y2: Double, open: Boolean): Polygon
 
     /**
      * Draws an arc segment from center point ox, oy with an inner and outer radius of ir, or. Lastly, you need to
@@ -149,7 +149,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
      * desired. It returns a Two.ArcSegment object.
      */
     //TODO: declare type bindings for ArcSegment
-    fun makeArcSegment(ox: Number, oy: Number, innerRadius: Number, outerRadius: Number, startingAngle : Number, endingAngle: Number, resolution: Number): Path
+    fun makeArcSegment(ox: Double, oy: Double, innerRadius: Double, outerRadius: Double, startingAngle : Double, endingAngle: Double, resolution: Double): Path
 
     /**
      * Draws a curved path to the instance's drawing space. The arguments are a little tricky. It returns a Two.Path
@@ -163,8 +163,8 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  curves this way to make the list of points Two.Anchor's.
      */
     //TODO: declare type bindings for Path
-    fun makeCurve(vararg coordinates: Number): Path
-    fun makeCurve(vararg coordinates: Number, open: Boolean): Path
+    fun makeCurve(vararg coordinates: Double): Path
+    fun makeCurve(vararg coordinates: Double, open: Boolean): Path
 
     /**
      *  Draws a path to the instance's drawing space. The arguments are a little tricky. It returns a Two.Path object.
@@ -176,7 +176,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  curves this way to make the list of points Two.Anchor's.
      */
     //TODO: declare type bindings for Path
-    fun makePath(vararg coordinates: Number): Path
+    fun makePath(vararg coordinates: Double): Path
 
     /**
      * Adds a group to the instance's drawing space. While a group does not have any visible features when rendered it
@@ -238,13 +238,13 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  anchor positions yourself. Generally speaking, this isn't something you need to deal with, although some great
      *  usecases arise from this customability, e.g: advanced curve manipulation.
      */
-    open class Path {
+    open class Path(verticies: Array<Anchor>, closed: Boolean, curved: Boolean) {
         /**
          * The id of the path. In the svg renderer this is the same number as the id attribute given to the
          * corresponding node. i.e: if path.id = 4 then document.querySelector('#two-' + group.id) will return the
          * corresponding svg node.
          */
-        open var id: Number
+        open var id: Long
         /**
          * A string representing the color for the stroke of the path. All valid css representations of color are
          * accepted.
@@ -258,11 +258,11 @@ open external class Two (params: TwoConstructionParams /* null */) {
         /**
          * A number representing the thickness the path's strokes. Must be a positive number.
          */
-        open var linewidth: Number
+        open var linewidth: Double
         /**
          * A number representing the opacity of the path. Use strictly for setting. Must be a number 0-1.
          */
-        open var opactiy: Number
+        open var opactiy: Double
 
         /**
          * A string representing the type of stroke cap to render.
@@ -281,17 +281,17 @@ open external class Two (params: TwoConstructionParams /* null */) {
         /**
          * A number representing the miter limit for the stroke. Defaults to 1.
          */
-        open var miter: Number
+        open var miter: Double
 
         /**
          * A number that represents the rotation of the path in the drawing space, in radians.
          */
-        open var rotation: Number
+        open var rotation: Double
 
         /**
          * A number that represents the uniform scale of the path in the drawing space.
          */
-        open var scale: Number
+        open var scale: Double
 
         /**
          * A Two.Vector that represents x, y translation of the path in the drawing space.
@@ -328,13 +328,13 @@ open external class Two (params: TwoConstructionParams /* null */) {
          * A number, 0-1, that is mapped to the layout and order of vertices. It represents which of the vertices from
          * beginning to end should start the shape. Exceedingly helpful for animating strokes. Defaults to 0.
          */
-        open var beginning: Number
+        open var beginning: Double
 
         /**
          * A number, 0-1, that is mapped to the layout and order of vertices. It represents which of the vertices from
          * beginning to end should end the shape. Exceedingly helpful for animating strokes. Defaults to 1.
          */
-        open var ending: Number
+        open var ending: Double
 
         /**
          * A boolean describing whether to render this shape as a clipping mask. This property is set automatically in
@@ -398,7 +398,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
      * Parameters retrieved directly from the source:
      *  https://github.com/jonobr1/two.js/blob/dev/src/shapes/circle.js
      */
-    open class Circle(ox: Number, oy: Number, r: Number, res: Number): Path
+    open class Circle(ox: Double, oy: Double, r: Double, res: Double): Path
 
     /**
      * This is a class for creating a line in two.js. It inherits from Two.Path, so it has all the same properties and
@@ -409,7 +409,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  A line takes two sets of x, y coordinates. x1, y1 to define the left endpoint and x2, y2 to define the right
      *  endpoint.
      */
-    open class Line(x1: Number, y1: Number, x2: Number, y2: Number): Path
+    open class Line(x1: Double, y1: Double, x2: Double, y2: Double): Path
 
     /**
      *  This is a class for creating a rectangle in two.js. It inherits from Two.Path, so it has all the same properties
@@ -420,7 +420,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  A rectangle takes a set of x, y coordinates as its origin (the center of the rectangle by default) and width,
      *  height parameters to define the width and height of the rectangle.
      */
-    open class Rectangle(x: Number, y: Number, width: Number, height: Number): Path
+    open class Rectangle(x: Double, y: Double, width: Double, height: Double): Path
 
     /**
      * This is a class for creating a rounded rectangle in two.js. It inherits from Two.Path, so it has all the same
@@ -433,7 +433,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  optional radius number representing the radius of the curve along the corner of the rectangle. radius defaults
      *  to 1/12th the of the smaller value between width, height.
      */
-    open class RoundedRectangle(x: Number, y: Number, width: Number, height: Number, radius: Number): Path
+    open class RoundedRectangle(x: Double, y: Double, width: Double, height: Double, radius: Double): Path
 
     /**
      * This is a class for creating an ellipse in two.js. It inherits from Two.Path, so it has all the same properties
@@ -444,7 +444,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  An ellipse takes a set of x, y coordinates as its origin (the center of the ellipse by default) and width,
      *  height parameters to define the width and height of the ellipse.
      */
-    open class Ellipse(x: Number, y: Number, width: Number, height: Number): Path
+    open class Ellipse(x: Double, y: Double, width: Double, height: Double): Path
 
     /**
      *  This is a class for creating a star in two.js. It inherits from Two.Path, so it has all the same properties and functions as Two.Path.
@@ -455,7 +455,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  define the outer radius of the star. Optionally you can define an ir inner radius for the star and sides for how
      *  many sides the star has. By default he ir is half the or and there are 5 sides.
      */
-    open class Star(x:Number, y:Number, or:Number, ir:Number, sides:Number): Path
+    open class Star(x:Double, y:Double, or:Double, ir:Double, sides:Long): Path
 
     /**
      * This is a class for creating a polygon, symmetrically multi-sided shape, in two.js. It inherits from Two.Path, so
@@ -467,7 +467,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
      * parameters to define the radius of the polygon and how many sides the polygon has. By default there are 3 sides,
      * a triangle.
      */
-    open class Polygon(x:Number, y:Number, radius:Number, sides:Number): Path
+    open class Polygon(x:Double, y:Double, radius:Double, sides:Long): Path
 
     /**
      *  This is a container object for two.js — it can hold shapes as well as other groups. At a technical level it can
@@ -486,7 +486,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
          * corresponding node. i.e:
          * if group.id = 5 then document.querySelector('#two-' + group.id) will return the corresponding node.
          */
-        open var id: Number
+        open var id: Long
 
         /**
          *A string representing the color for the stroke of all child shapes. Use strictly for setting. All valid css
@@ -504,12 +504,12 @@ open external class Two (params: TwoConstructionParams /* null */) {
          * A number representing the thickness of all child shapes' strokes. Use strictly for setting.
          * Must be a positive number.
          */
-        open var linewidth: Number
+        open var linewidth: Double
 
         /**
          * A number representing the opacity of all child shapes. Use strictly for setting. Must be a number 0-1.
          */
-        open var opactiy: Number
+        open var opactiy: Double
 
         /**
          * A string representing the type of stroke cap to render for all child shapes. Use strictly for setting.
@@ -527,17 +527,17 @@ open external class Two (params: TwoConstructionParams /* null */) {
          * A number representing the miter limit for the stroke of all child objects. Use strictly for setting.
          * Defaults to 1.
          */
-        open var miter: Number
+        open var miter: Double
 
         /**
          * A number that represents the rotation of the group in the drawing space, in radians.
          */
-        open var rotation: Number
+        open var rotation: Double
 
         /**
          * A number that represents the uniform scale of the group in the drawing space.
          */
-        open var scale: Number
+        open var scale: Double
 
         /**
          * A Two.Vector that represents x, y translation of the group in the drawing space.
@@ -615,17 +615,17 @@ open external class Two (params: TwoConstructionParams /* null */) {
         /**
          * The x value of the vector.
          */
-        var x: Number
+        var x: Double
 
         /**
          * The y value of the vector.
          */
-        var y: Number
+        var y: Double
 
         /**
          * Set the x, y properties of the vector to the arguments x, y.
          */
-        fun set(x: Number, y: Number)
+        fun set(x: Double, y: Double)
 
         /**
          * Set the x, y properties of the vector from another vector, v.
@@ -670,12 +670,12 @@ open external class Two (params: TwoConstructionParams /* null */) {
         /**
          * Multiply the x, y values of the instance by another number, value.
          */
-        fun multiplyScalar(value: Number)
+        fun multiplyScalar(value: Double)
 
         /**
          * Divide the x, y values of the instance by another number, value.
          */
-        fun divideScalar(value: Number)
+        fun divideScalar(value: Double)
 
         /**
          * Toggle the sign of the instance's x, y values.
@@ -715,7 +715,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
         /**
          * Set the length of a vector to a specified distance, length.
          */
-        fun setLength(length: Number)
+        fun setLength(length: Double)
 
         /**
          * Return a boolean representing whether or not the vectors are within 0.0001 of each other. This fuzzy equality
@@ -726,7 +726,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
         /**
          * Linear interpolation of the instance's current x, y values to the destination vector, v, by an amount, t. Where t is a value 0-1.
          */
-        fun lerp(v: Vector, t: Number)
+        fun lerp(v: Vector, t: Double)
 
         /**
          * Returns a boolean describing the length of the vector less than 0.0001.
@@ -748,7 +748,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  command describes what action the renderer will take once rendering. A more detailed description of commands can
      *  be found on the w3c and the available commands in two.js can be found under Two.Commands.
      */
-    open class Anchor(x: Number, y: Number, lx: Number, ly: Number, rx: Number, ry: Number, command: Commands): Vector {
+    open class Anchor(x: Double, y: Double, lx: Double, ly: Double, rx: Double, ry: Double, command: Commands): Vector {
         var command: Commands
 
         /**
@@ -793,11 +793,11 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  rendered. It also takes a color which is a css string representing the color value and an optional opacity
      *  which is also a 0 to 1 value.
      */
-    open class Stop(offset: Number, color: String, opactiy: Number) {
+    open class Stop(offset: Double, color: String, opactiy: Double) {
         /**
          * A 0 to 1 offset value which defines where on the trajectory of the gradient the full color is rendered.
          */
-        var offset: Number
+        var offset: Double
         /**
          * A css string that represents the color of the stop.
          */
@@ -805,7 +805,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
         /**
          * A 0 to 1 value which defines the opacity of the stop.
          */
-        var opactiy: Number
+        var opactiy: Double
         /**
          * Clones a stop. Returns a new Two.Stop.
          */
@@ -825,7 +825,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  positive quadrant in order for the gradient to render correctly. Lastly it takes an array of Two.Stops which
      *  represent the color value along the gradient's trajectory.
      */
-    open class LinearGradient(x1: Number, y1: Number, x2: Number, y2: Number, stops: Array<Stop>) {
+    open class LinearGradient(x1: Double, y1: Double, x2: Double, y2: Double, stops: Array<Stop>) {
         /**
          * A Two.Vector that represents the position of the x, y coordinates to the “left” of the gradient's two end points.
          */
@@ -862,15 +862,15 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  radial gradient. Optionally, you can pass a set of x, y coordinates to define the focal position of the radial
      *  gradient's trajectory.
      */
-    open class RadialGradient(x: Number, y: Number, radius: Number, stops: Array<Stop>, fx: Number, fy: Number) {
+    open class RadialGradient(x: Double, y: Double, radius: Double, stops: Array<Stop>, fx: Double, fy: Double) {
         /**
          * A Two.Vector that represents the position of the x, y coordinates at the center of the gradient.
          */
         var center: Vector
         /**
-         * A number representing the radius of the radialGradient.
+         * A Double representing the radius of the radialGradient.
          */
-        var radius: Number
+        var radius: Double
         /**
          * A Two.Vector that represents the position of the x, y coordinates as the focal point for the gradient's trajectory.
          */
@@ -902,15 +902,47 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  number where the text object will be placed in the group. Finally, an optional styles object to apply any other
      *  additional styles. Applicable properties to affect can be found in Two.Text.Properties.
      */
-    open class Text(message: String, x: Number, y: Number, styles:Any): Path {
+    open class Text(message: String, x: Double, y: Double, styles:Any?): Path {
+        /**
+         * A string representing the text that will be rendered to the stage.
+         */
         var value: String
+        /**
+         * A string representing the css font-family to be applied to the rendered text. Default value is 'sans-serif'.
+         */
         var family: String
-        var size: Number
-        var leading: Number
+        /**
+         * A number representing the text's size to be applied to the rendered text. Default value is 13.
+         */
+        var size: Double
+        /**
+         * A number representing the leading, a.k.a. line-height, to be applied to the rendered text. Default value is
+         * 17.
+         */
+        var leading: Double
+        /**
+         * A string representing the horizontal alignment to be applied to the rendered text. e.g: 'left', 'right', or
+         * 'center'. Default value is 'middle'.
+         */
         var alignment: String
+        /**
+         * A number representing the linewidth to be applied to the rendered text. Default value is 1.
+         */
         var style: String
-        var weight: Number
+        /**
+         * A string representing the font style to be applied to the rendered text. e.g: 'normal' or 'italic'.
+         * Default value is 'normal'.
+         */
+        var weight: Double
+        /**
+         * A number or string representing the weight to be applied to the rendered text. e.g: 500 or 'normal'. For more
+         * information see the Font Weight Specification. Default value is 500.
+         */
         var decoration: String
+        /**
+         * A string representing the text decoration to be applied to the rendered text. e.g: 'none', 'underlined', or
+         * 'strikethrough'. Default value is 'none'
+         */
         var baseline: String
     }
 
@@ -926,13 +958,13 @@ external interface TwoConstructionParams {
     /**
      * Set the width of the drawing space. Disregarded if params.fullscreen is set to true. Default width is 640 pixels.
      */
-    var width: Number?
+    var width: Double?
         get() = definedExternally
         set(value) = definedExternally
     /**
      * Set the height of the drawing space. Disregarded if params.fullscreen is set to true. Default height is 480 pixels.
      */
-    var height: Number?
+    var height: Double?
         get() = definedExternally
         set(value) = definedExternally
     /**
@@ -955,16 +987,16 @@ external interface TwoConstructionParams {
      * Set the resolution ratio for canvas and webgl renderers.
      * If left blank two.js automatically infers the ratio based on the devicePixelRatio api.
      */
-    var raiot: Number?
+    var raiot: Double?
         get() = definedExternally
         set(value) = definedExternally
 }
 
 external interface BoundingRect {
-    var top: Number
-    var left: Number
-    var right: Number
-    var bottom: Number
-    var width: Number
-    var height: Number
+    var top: Double
+    var left: Double
+    var right: Double
+    var bottom: Double
+    var width: Double
+    var height: Double
 }
