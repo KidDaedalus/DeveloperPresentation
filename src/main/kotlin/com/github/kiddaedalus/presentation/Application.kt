@@ -16,10 +16,8 @@ fun main(vararg args: String) {
     })
     two.appendTo(drawShapes)
 
-    val tableau = Tableau(500.0,500.0)
+    val tableau = Tableau(150.0, 150.0, 30.0)
     two.scene.add(tableau.allShapes)
-
-    //val plus = Two.Path(arrayOf(Two.Anchor()))
 
     two.update()
 }

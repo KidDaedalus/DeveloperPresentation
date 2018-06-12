@@ -306,7 +306,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
         /**
          * A Two.Utils.Collection of Two.Anchors that is two-way databound. Individual vertices may be manipulated.
          */
-        open var verticies: Collection<Anchor>
+        open var vertices : Array<Anchor>
 
         /**
          * Boolean that describes whether the path is closed or not.
@@ -946,11 +946,11 @@ open external class Two (params: TwoConstructionParams /* null */) {
         var baseline: String
     }
 
-    //TODO: Figure this out
-    open class Commands {
-
+    enum class Commands {
+        move, line, curve
     }
 }
+
 external interface TwoConstructionParams {
     var type: Two.Types?
         get() = definedExternally
