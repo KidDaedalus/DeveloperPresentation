@@ -16,6 +16,7 @@ class Plus(var x: Double,
     init {
         noStroke()
         update()
+        translation.set(x, y)
     }
 
     /**
@@ -23,18 +24,19 @@ class Plus(var x: Double,
      */
     fun update() {
         val halfThick = thickness / 2
-        vertices[0].set(x-(armLength+halfThick), y+halfThick)
-        vertices[1].set(x-halfThick, y+halfThick)
-        vertices[2].set(x-halfThick, y+halfThick+armLength)
-        vertices[3].set(x+halfThick, y+halfThick+armLength)
-        vertices[4].set(x+halfThick, y+halfThick)
-        vertices[5].set(x+halfThick+armLength, y+halfThick)
-        vertices[6].set(x+halfThick+armLength, y-halfThick)
-        vertices[7].set(x+halfThick, y-halfThick)
-        vertices[8].set(x+halfThick, y-halfThick-armLength)
-        vertices[9].set(x-halfThick, y-halfThick-armLength)
-        vertices[10].set(x-halfThick, y-halfThick)
-        vertices[11].set(x-halfThick-armLength, y-halfThick)
+        vertices[0].command = Two.Commands.move
+        vertices[0].set(-(armLength+halfThick), halfThick)
+        vertices[1].set(-halfThick, halfThick)
+        vertices[2].set(-halfThick, halfThick+armLength)
+        vertices[3].set(halfThick, halfThick+armLength)
+        vertices[4].set(halfThick, halfThick)
+        vertices[5].set(halfThick+armLength, halfThick)
+        vertices[6].set(halfThick+armLength, -halfThick)
+        vertices[7].set(halfThick, -halfThick)
+        vertices[8].set(halfThick, -halfThick-armLength)
+        vertices[9].set(-halfThick, -halfThick-armLength)
+        vertices[10].set(-halfThick, -halfThick)
+        vertices[11].set(-halfThick-armLength, -halfThick)
     }
 }
 
@@ -55,11 +57,7 @@ class Tableau(var x: Double,
               val bottomPlus:        Plus = Plus(x, y - offset, plusSize * tertiaryScaling ).apply { fill = tabBlueLight},
               val leftPlus:       Plus = Plus(x - offset, y,plusSize * tertiaryScaling ).apply { fill = tabBlueLight},
               val rightPlus:      Plus = Plus(x + offset, y,plusSize * tertiaryScaling ).apply { fill = tabBluePale},
-              val topPlus:     Plus = Plus(x, y + offset,plusSize * tertiaryScaling ).apply { fill = tabBluePale},
-
-              val allShapes: Array<Plus> = arrayOf(middlePlus, upperLeftPlus, upperRightPlus,lowerLeftPlus,
-                      lowerRightPlus, topPlus,leftPlus, rightPlus,bottomPlus)
-
+              val topPlus:     Plus = Plus(x, y + offset,plusSize * tertiaryScaling ).apply { fill = tabBluePale}
 ): Two.Group() {
     companion object {
         const val tabOrange = "#E9762D"
@@ -70,7 +68,13 @@ class Tableau(var x: Double,
         const val tabBlueLight = "#59879B"
     }
 
+    val allShapes: Array<Plus> = arrayOf(middlePlus, upperLeftPlus, upperRightPlus,lowerLeftPlus,
+            lowerRightPlus, topPlus,leftPlus, rightPlus,bottomPlus)
+    val cornerShapes: Array<Plus> = arrayOf(upperLeftPlus, upperRightPlus,lowerLeftPlus, lowerRightPlus)
+    val tertiaryShapes: Array<Plus> = arrayOf(topPlus, bottomPlus, leftPlus, rightPlus)
     init {
+
         this.add(allShapes)
+        translation.set(x, y)
     }
 }

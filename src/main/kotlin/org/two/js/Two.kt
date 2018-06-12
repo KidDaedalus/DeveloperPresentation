@@ -84,13 +84,13 @@ open external class Two (params: TwoConstructionParams /* null */) {
      * Add one or many shapes / groups to the instance.
      * Objects can be added as arguments, two.add(o1, o2, oN), or as an array depicted above.
      */
-    fun add(): Unit
+    fun add(vararg objects: Any): Unit
 
     /**
      * Remove one or many shapes / groups from the instance. Objects can be removed as arguments,
      * two.remove(o1, o2, oN), or as an array depicted above.
      */
-    fun remove(): Unit
+    fun remove(vararg objects: Any): Unit
 
     /**
      * Removes all objects from the instance's scene. If you intend to have the browser garbage collect this,
@@ -134,8 +134,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
      * and or, ir are the outer and inner radii for the star, and sides are how many points the star has.
      * It returns a Two.Star object.
      */
-    //TODO: declare type bindings for Star
-    fun makeStart(ox:Double, oy:Double, or: Double, ir: Double, sides: Long): Star
+    fun makeStar(ox:Double, oy:Double, or: Double, ir: Double, sides: Long): Star
 
     /**
      * Draws a polygon to the instance's drawing space where ox, oy are the x, y values for the center of the polygon,
@@ -547,7 +546,6 @@ open external class Two (params: TwoConstructionParams /* null */) {
         /**
          * A map of all the children of the group.
          */
-        //TODO Figure out what type this actually is
         open var children: Array<Any>
 
         /**
