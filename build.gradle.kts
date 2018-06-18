@@ -15,7 +15,7 @@ buildscript {
     }
 }
 plugins.apply(org.jetbrains.kotlin.gradle.frontend.FrontendPlugin::class.java)
-plugins.apply("kotlin-dce-js")
+//plugins.apply("kotlin-dce-js")
 plugins.apply(org.jetbrains.kotlin.gradle.plugin.Kotlin2JsPluginWrapper::class.java)
 
 repositories {
@@ -52,13 +52,12 @@ kotlinFrontend{
         this as WebPackExtension
         contentPath = project.file("src/main/web")
         mode = "development"
-
     }
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile::class.java) {
     kotlinOptions {
         sourceMap = true
-        moduleKind = "commonjs"
+        moduleKind = "umd"
     }
 }

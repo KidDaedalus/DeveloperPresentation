@@ -5,8 +5,8 @@ import org.two.js.Two
 /**
  * A '+' symbol
  */
-class Plus(var x: Double,
-           var y: Double,
+class Plus(x: Double,
+           y: Double,
            var armLength: Double = 12.0,
            var thickness: Double = armLength/3):
         Two.Path(
