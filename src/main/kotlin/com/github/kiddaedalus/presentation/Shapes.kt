@@ -11,7 +11,7 @@ class Plus(x: Double,
            var thickness: Double = armLength/3):
         Two.Path(
                 // Twelve anchor points fully specify a '+'
-            Array(12, {_ -> anchor()}),
+            Array(13, {_ -> anchor()}),
             true, false) {
     init {
         noStroke()
@@ -37,6 +37,7 @@ class Plus(x: Double,
         vertices[9].set(-halfThick, -halfThick-armLength)
         vertices[10].set(-halfThick, -halfThick)
         vertices[11].set(-halfThick-armLength, -halfThick)
+        vertices[12].set(-(armLength+halfThick), halfThick)
     }
 }
 

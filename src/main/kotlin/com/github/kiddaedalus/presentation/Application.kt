@@ -8,14 +8,24 @@ import kotlin.math.PI
 import kotlin.math.min
 import kotlin.math.sqrt
 
+class Application {
+    companion object {
+        val two = Two(object: TwoConstructionParams {
+            override var fullscreen: Boolean? = true
+        })
+        // two.js calls update() 60 times per second when told to play, so this is effectively fixed
+        const val framesPerSecond = 60
+
+        const val millisPerFrame:Double = (1.0/ framesPerSecond) * 1000
+    }
+}
+
 fun main(vararg args: String) {
 
     val messageBox = document.getElementById("message-box") as HTMLElement
     val drawShapes = document.getElementById("draw-shapes") as HTMLElement
 
-    val two = Two(object: TwoConstructionParams {
-        override var fullscreen: Boolean? = true
-    })
+    val two = Application.two
     two.appendTo(drawShapes)
 
     val tableau = Tableau(150.0,150.0, 40.0 )
@@ -27,20 +37,14 @@ fun main(vararg args: String) {
     tableau.middlePlus.stroke = Tableau.tabOrange
     tableau.middlePlus.closed = false
 
-    var t: Double = 0.1
+
     two.bind(Two.Events.update) {
         tableau.tertiaryShapes.map { it.rotation += PI / 120 }
         tableau.cornerShapes.map { it.rotation -= PI / 240 }
         tableau.middlePlus.rotation += PI / 240
-        tableau.middlePlus.ending = t
 
-        if(t < 1.0) {
-            t += 0.01
-            t %= 1.0
-        } else {
-            t = 0.5
-        }
     }
+    tableau.allShapes.map { it.appear(durationMillis = 5000L)}
 
     two.play()
 }
