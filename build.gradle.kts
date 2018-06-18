@@ -10,8 +10,8 @@ buildscript {
         }
 	}
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.41")
-		classpath("org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.30")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.50")
+		classpath("org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.31")
     }
 }
 plugins.apply(org.jetbrains.kotlin.gradle.frontend.FrontendPlugin::class.java)
@@ -25,7 +25,7 @@ repositories {
 	}
 }
 
-val kotlinVersion = "1.2.41"
+val kotlinVersion = "1.2.50"
 dependencies {
     "compile" ("org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion")
 	"compile" ("org.jetbrains.kotlin:kotlin-test-js:$kotlinVersion")

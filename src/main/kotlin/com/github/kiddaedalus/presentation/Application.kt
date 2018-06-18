@@ -25,6 +25,7 @@ fun main(vararg args: String) {
     two.bind(Two.Events.update) {
         tableau.tertiaryShapes.map { it.rotation += PI / 120 }
         tableau.cornerShapes.map { it.rotation -= PI / 240 }
+        tableau.middlePlus.rotation += PI / 240
     }
 
     two.play()
