@@ -46,5 +46,7 @@ fun main(vararg args: String) {
     }
     tableau.allShapes.map { it.appear(durationMillis = 5000L)}
 
+    Color(1120, 255,255, 1.0)
+
     two.play()
 }

@@ -15,8 +15,9 @@ buildscript {
     }
 }
 plugins.apply(org.jetbrains.kotlin.gradle.frontend.FrontendPlugin::class.java)
-//plugins.apply("kotlin-dce-js")
 plugins.apply(org.jetbrains.kotlin.gradle.plugin.Kotlin2JsPluginWrapper::class.java)
+// Get some errors in the console when including this plugin
+//plugins.apply("kotlin-dce-js")
 
 repositories {
 	jcenter()
@@ -27,15 +28,17 @@ repositories {
 
 val kotlinVersion = "1.2.50"
 dependencies {
-    "compile" ("org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion")
-	"compile" ("org.jetbrains.kotlin:kotlin-test-js:$kotlinVersion")
-	"compile" ("org.jetbrains.kotlinx:kotlinx-html-js:0.6.6")
+    compile ("org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion")
+	compile ("org.jetbrains.kotlin:kotlin-test-js:$kotlinVersion")
+	compile ("org.jetbrains.kotlinx:kotlinx-html-js:0.6.6")
+
+    testCompile("org.jetbrains.kotlin:kotlin-test-js:$kotlinVersion")
 }
 
 
 npm {
     dependency("two.js", "0.7.0-alpha.1")
-    devDependency("karma")
+    devDependency("qunit", "2.6.1")
 }
 
 kotlinFrontend{
