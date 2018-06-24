@@ -14,10 +14,13 @@ buildscript {
 		classpath("org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.31")
     }
 }
-plugins.apply(org.jetbrains.kotlin.gradle.frontend.FrontendPlugin::class.java)
+
 plugins.apply(org.jetbrains.kotlin.gradle.plugin.Kotlin2JsPluginWrapper::class.java)
+plugins.apply(org.jetbrains.kotlin.gradle.frontend.FrontendPlugin::class.java)
+
 // Get some errors in the console when including this plugin
 //plugins.apply("kotlin-dce-js")
+//plugins.apply("com.craigburke.karma")
 
 repositories {
 	jcenter()
@@ -29,20 +32,13 @@ repositories {
 val kotlinVersion = "1.2.50"
 dependencies {
     compile ("org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion")
-	compile ("org.jetbrains.kotlin:kotlin-test-js:$kotlinVersion")
 	compile ("org.jetbrains.kotlinx:kotlinx-html-js:0.6.6")
 
     testCompile("org.jetbrains.kotlin:kotlin-test-js:$kotlinVersion")
 }
 
-
-npm {
-    dependency("two.js", "0.7.0-alpha.1")
-    devDependency("qunit", "2.6.1")
-}
-
 kotlinFrontend{
-    downloadNodeJsVersion = "8.11.2"
+    downloadNodeJsVersion = "8.11.3"
     sourceMaps = true
 
     // In the groovy DSL this would just be "webpackBundle"
@@ -56,6 +52,11 @@ kotlinFrontend{
         contentPath = project.file("src/main/web")
         mode = "development"
     }
+}
+npm {
+    dependency("two.js", "0.7.0-alpha.1")
+    devDependency("qunit", "2.6.1")
+    devDependency("karma")
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile::class.java) {

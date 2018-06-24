@@ -39,4 +39,10 @@ data class Color(val red: Short, val green: Short, val blue: Short, val alpha: D
      * https://www.w3schools.com/cssref/func_rgba.asp
      */
     fun toRgba(): String = "rbga($red, $blue, $green, $alpha)"
+
+    /**
+     * Return this color as a CSS hex string #RRGGBB
+     * This format does not include the alpha channel
+     */
+    fun toHex(): String = ""
 }
