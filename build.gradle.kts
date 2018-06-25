@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
 import org.jetbrains.kotlin.gradle.frontend.config.BundleConfig
 import org.jetbrains.kotlin.gradle.frontend.webpack.WebPackBundler
 import org.jetbrains.kotlin.gradle.frontend.webpack.WebPackExtension
@@ -56,12 +57,21 @@ kotlinFrontend{
 npm {
     dependency("two.js", "0.7.0-alpha.1")
     devDependency("qunit", "2.6.1")
-    devDependency("karma")
+    devDependency("karma", "2.0.4")
 }
 
-tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile::class.java) {
+val compileKotlin = tasks.getByName("compileKotlin2Js") {
+    this as KotlinJsCompile
     kotlinOptions {
         sourceMap = true
         moduleKind = "umd"
+    }
+}
+val compileTestKotiln = tasks.getByName("compileTestKotlin2Js") {
+    this as KotlinJsCompile
+    kotlinOptions {
+        sourceMap = true
+        moduleKind = "commonjs"
+        sourceMapEmbedSources = "always"
     }
 }

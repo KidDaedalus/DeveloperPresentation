@@ -196,14 +196,14 @@ open external class Two (params: TwoConstructionParams /* null */) {
      * Bind an event, string, to a callback function. Passing "all" will bind the callback to all events.
      * Inherited from Backbone.js.
      */
-    fun bind(event: Events, callback: (arg: Array<Any>? /*= null*/) -> Unit): Two
+    fun bind(event: Events, callback: (framecount:Double /*= null*/) -> Unit): Two
 
     /**
      * Remove one or many callback functions. If callback is null it removes all callbacks for an event.
      * If the event name is null, all callback functions for the instance are removed. This is highly discouraged.
      * Inherited from Backbone.js.
      */
-    fun unbind(event: Events, callback: (arg: Array<Any>? /*= null*/) -> Unit): Two
+    fun unbind(event: Events, callback: (framecount:Double /*= null*/) -> Unit): Two
 
     /**
      * It would make sense to me if this were an enum, but it isn't
@@ -243,7 +243,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
          * corresponding node. i.e: if path.id = 4 then document.querySelector('#two-' + group.id) will return the
          * corresponding svg node.
          */
-        open var id: Long
+        open var id: String
         /**
          * A string representing the color for the stroke of the path. All valid css representations of color are
          * accepted.
@@ -485,7 +485,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
          * corresponding node. i.e:
          * if group.id = 5 then document.querySelector('#two-' + group.id) will return the corresponding node.
          */
-        open var id: Long
+        open var id: String
 
         /**
          *A string representing the color for the stroke of all child shapes. Use strictly for setting. All valid css
@@ -950,44 +950,33 @@ open external class Two (params: TwoConstructionParams /* null */) {
 }
 
 external interface TwoConstructionParams {
+
     var type: Two.Types?
-        get() = definedExternally
-        set(value) = definedExternally
     /**
      * Set the width of the drawing space. Disregarded if params.fullscreen is set to true. Default width is 640 pixels.
      */
     var width: Double?
-        get() = definedExternally
-        set(value) = definedExternally
     /**
      * Set the height of the drawing space. Disregarded if params.fullscreen is set to true. Default height is 480 pixels.
      */
     var height: Double?
-        get() = definedExternally
-        set(value) = definedExternally
     /**
      * A boolean to automatically add the instance to draw on requestAnimationFrame.
      * This is a convenient substitute so you don't have to call two.play().
      */
     var autostart: Boolean?
-        get() = definedExternally
-        set(value) = definedExternally
 
     /**
      * A boolean to set the drawing space of the instance to be fullscreen or not.
      * If set to true then width and height parameters will not be respected.
      */
     var fullscreen: Boolean?
-        get() = definedExternally
-        set(value) = definedExternally
 
     /**
      * Set the resolution ratio for canvas and webgl renderers.
      * If left blank two.js automatically infers the ratio based on the devicePixelRatio api.
      */
     var raiot: Double?
-        get() = definedExternally
-        set(value) = definedExternally
 }
 
 external interface BoundingRect {
