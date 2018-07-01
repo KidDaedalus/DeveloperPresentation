@@ -5,14 +5,19 @@ import kotlin.math.roundToLong
 
 interface Animated {
     fun animate(currentFrame: Double): Boolean
+    val durationFrames: Long
+    val durationMillis: Long
 }
 
 class Animation(
-        val durationMillis: Long = 0,
+        override val durationMillis: Long = 0,
         val shapes: Array<out Two.Path>,
         val effect: Two.Path.(Double)->Unit) : Animated {
+
     private var _initialFrame = 0L
     private var _finalFrame = Long.MAX_VALUE
+
+    override val durationFrames: Long = ( durationMillis * Application.framesPerMilli).roundToLong()
 
     /**
      * Animate the given shapes according to the provided effect
@@ -24,7 +29,7 @@ class Animation(
             _initialFrame = currentFrame.roundToLong()
             // Take a 0-duration to mean "run animation forever"
             if(durationMillis > 0) {
-                _finalFrame =  (_initialFrame + ( durationMillis * Application.framesPerMilli)).roundToLong()
+                _finalFrame =  _initialFrame + durationFrames
             }
         }
         val progressPercent = currentFrame / _finalFrame
@@ -33,7 +38,7 @@ class Animation(
     }
 }
 
-class Appear(val durationMillis: Long = 1000L,
+class Appear(override val durationMillis: Long = 1000L,
              val shapes: Array<out Two.Path>) : Animated by
 Animation(durationMillis, shapes,
         { progressPercent ->

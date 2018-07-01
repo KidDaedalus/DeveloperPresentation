@@ -35,18 +35,22 @@ fun main(vararg args: String) {
     tableau.opactiy = 0.5
     tableau.middlePlus.opactiy = 0.5
 
-    val animations: MutableList<Animated> = mutableListOf(
-        Appear(durationMillis = 3000L, shapes = arrayOf(tableau.middlePlus)),
-        Appear(durationMillis = 2000L, shapes = tableau.cornerShapes),
-        Appear(durationMillis = 1000L, shapes = tableau.tertiaryShapes)
-    )
+    val timeline = AnimationTimeline(listOf(
+            TimelineStage(listOf(
+                    listOf(Appear(durationMillis = 3000L, shapes = arrayOf(tableau.middlePlus))),
+                    listOf(Appear(durationMillis = 2000L, shapes = tableau.cornerShapes)),
+                    listOf(Appear(durationMillis = 1000L, shapes = tableau.tertiaryShapes))
+            ))
+    ))
 
     two.bind(Two.Events.update) {
-        val frameCount = it
-        animations.forEach {
-            val finished = it.animate(frameCount)
-            if(finished) {
-                animations.remove(it)
+        val currentFrame = it
+        val currentStage = timeline.first()
+        if(currentFrame < currentStage.durationFrames) {
+            currentStage.forEach {
+                it.forEach {
+                    it.animate(currentFrame)
+                }
             }
         }
 
