@@ -52,7 +52,7 @@ data class Color(val red: Short, val green: Short, val blue: Short, val alpha: D
 
 
     operator fun minus(other: Color) =
-            Color(red   = (red - other.red).toShort(),
+            Color(red   = clampColorValue((red - other.red).toShort()),
                   green = (green - other.green).toShort(),
                   blue  = (blue - other.blue).toShort())
 
@@ -60,14 +60,14 @@ data class Color(val red: Short, val green: Short, val blue: Short, val alpha: D
      * Returns this color as a CSS rgba string
      * https://www.w3schools.com/cssref/func_rgba.asp
      */
-    fun toRgba(): String = "rbga($red,$blue,$green,$alpha)"
+    fun toRgba(): String = "rgba($red,$blue,$green,$alpha)"
 
     /**
      * Return this color as a CSS hex string #RRGGBB
      * This format does not include the alpha channel
      */
     fun toHex(): String = "#" +
-            red.toString(hexadecimalRadix).padStart(2, '0') +
-            green.toString(hexadecimalRadix).padStart(2, '0') +
-            blue.toString(hexadecimalRadix).padStart(2, '0')
+            red.toString(hexadecimalRadix).padStart(2, '0').toUpperCase() +
+            green.toString(hexadecimalRadix).padStart(2, '0').toUpperCase() +
+            blue.toString(hexadecimalRadix).padStart(2, '0').toUpperCase()
 }
