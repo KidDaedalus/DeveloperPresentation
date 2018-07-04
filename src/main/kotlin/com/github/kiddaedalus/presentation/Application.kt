@@ -18,14 +18,23 @@ class Application {
 }
 
 fun main(vararg args: String) {
-
     val tableau = Tableau(150.0,150.0, 40.0 )
 
     val timeline = timeline {
         stage(
-                appear(3000L, tableau.middlePlus),
-                Appear(durationMillis = 2000L, shapes = tableau.cornerShapes),
-                Appear(durationMillis = 1000L, shapes = tableau.tertiaryShapes)
+                tableau.middlePlus.appear(3000L),
+                tableau.cornerShapes.appear(2000L),
+                tableau.tertiaryShapes.appear(1000L)
+        )
+        stage(
+                tableau.middlePlus.disappear()
+        )
+        stage(
+                tableau.middlePlus.appear(),
+                tableau.cornerShapes.disappear()
+        )
+        stage(
+                tableau.cornerShapes.appear()
         )
     }
 

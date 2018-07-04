@@ -11,7 +11,7 @@ buildscript {
         }
 	}
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.50")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.51")
 		classpath("org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.31")
     }
 }
@@ -30,7 +30,7 @@ repositories {
 	}
 }
 
-val kotlinVersion = "1.2.50"
+val kotlinVersion = "1.2.51"
 dependencies {
     compile ("org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion")
 	compile ("org.jetbrains.kotlinx:kotlinx-html-js:0.6.6")

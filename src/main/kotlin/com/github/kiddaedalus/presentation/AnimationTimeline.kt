@@ -52,9 +52,10 @@ class AnimationTimeline(private val stages:  List<TimelineStage>):  List<Timelin
     fun update() {
         var framesRemaining: Long = frameCounter
         for(stage in stages) {
-            val stageFrameState = min(framesRemaining, stage.durationFrames)
-            stage.animateForFrame(stageFrameState)
-            framesRemaining -= stageFrameState
+            if(framesRemaining <= stage.durationFrames) {
+                stage.animateForFrame(framesRemaining)
+            }
+            framesRemaining -= stage.durationFrames
             if(framesRemaining < 0) {
                 break
             }

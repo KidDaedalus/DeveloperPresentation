@@ -10,9 +10,14 @@ interface Animated {
     val durationMillis: Long
 }
 
+/**
+ * One second in milliseconds
+ */
+const val defaultEffectDuration = 1000L
+
 class Animation(
-        override val durationMillis: Long = 0,
-        val shapes: List<out Two.Path>,
+        override val durationMillis: Long = defaultEffectDuration,
+        val shapes: List<Two.Path>,
         val effect: Two.Path.(Double)->Unit) : Animated {
 
     override val durationFrames: Long = ( durationMillis * Application.framesPerMilli).roundToLong()
@@ -29,27 +34,26 @@ class Animation(
     }
 }
 
-fun Two.Path.appear(progressPercent: Double) {
+
+/**
+ * An Animation effect that causes the specified shape to
+ */
+fun Two.Path.appearEffect(progressPercent: Double) {
     svgOpacity = progressPercent
     scale = progressPercent
 }
+fun Two.Path.appear(durationMillis: Long = defaultEffectDuration) =
+        Animation(durationMillis, listOf(this), Two.Path::appearEffect)
+fun Collection<Two.Path>.appear(durationMillis: Long = defaultEffectDuration) =
+        Animation(durationMillis, this.toList(), Two.Path::appearEffect)
 
-fun appear(durationMillis: Long = 1000L, vararg shapes: Two.Path): Animated {
-    return Animation(durationMillis, listOf(*shapes), Two.Path::appear)
+
+fun Two.Path.disappearEffect(progressPercent: Double) {
+    svgOpacity = 1 - progressPercent
+    scale = 1 - progressPercent
 }
+fun Two.Path.disappear(durationMillis: Long = defaultEffectDuration) =
+        Animation(durationMillis, listOf(this), Two.Path::disappearEffect)
+fun Collection<Two.Path>.disappear(durationMillis: Long = defaultEffectDuration) =
+        Animation(durationMillis, this.toList(), Two.Path::disappearEffect)
 
-class Appear(override val durationMillis: Long = 1000L,
-             val shapes: List<out Two.Path>) : Animated by
-Animation(durationMillis, shapes,
-        { progressPercent ->
-            svgOpacity = progressPercent
-            scale = progressPercent
-        })
-
-class Disappear(override val durationMillis: Long = 1000L,
-             val shapes: List<out Two.Path>) : Animated by
-Animation(durationMillis, shapes,
-        { progressPercent ->
-            svgOpacity = 1 - progressPercent
-            scale = 1 - progressPercent
-        })
