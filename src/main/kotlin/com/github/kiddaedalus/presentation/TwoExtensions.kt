@@ -15,7 +15,7 @@ fun anchor(x: Double, y: Double, command: Two.Commands = Two.Commands.line): Two
         Two.Anchor(x,y,x,y,x,y,command)
 
 /**
- * For some reason setting opacity through the usual property doesn't work
+ * For some reason setting opacity through the 'opacity' property doesn't work...
  */
 var Two.Path.svgOpacity: Double
     get() {
@@ -24,8 +24,20 @@ var Two.Path.svgOpacity: Double
 
     }
     set(value) {
-        // Try to keep the two.js model in sync with the view
+        // Try to keep the two.js model in sync with the view, despite setting opacity having no apparent effect
         this.opactiy = value
         val element = document.getElementById(this.id)
         element?.setAttribute("fill-opacity", value.toString())
     }
+
+/**
+ * Restrict a comparable to a range.
+ * If the comparable exceeds the upper bound given by max, return max
+ * If the comparable exceeds the lower bound given by min, return min
+ */
+fun <T : Comparable<T>> T.clamp(min: T, max: T): T =
+        when {
+            this < min -> min
+            this > max -> max
+            else -> this
+        }

@@ -8,7 +8,6 @@ import kotlin.test.fail
 
 class ColorTest {
     @Test fun basicSerializationTest() {
-
         val black = Color(0, 0,0, 1.0)
         assertEquals("#000000", black.toHex() )
         assertEquals("rgba(0,0,0,1)", black.toRgba() )

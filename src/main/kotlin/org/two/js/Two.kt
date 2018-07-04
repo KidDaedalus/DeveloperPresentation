@@ -84,13 +84,25 @@ open external class Two (params: TwoConstructionParams /* null */) {
      * Add one or many shapes / groups to the instance.
      * Objects can be added as arguments, two.add(o1, o2, oN), or as an array depicted above.
      */
-    fun add(vararg objects: Any): Unit
+    fun add(vararg objects: Two.Path): Unit
+
+    /**
+     * Add one or many shapes / groups to the instance.
+     * Objects can be added as arguments, two.add(o1, o2, oN), or as an array depicted above.
+     */
+    fun add(vararg objects: Two.Group): Unit
 
     /**
      * Remove one or many shapes / groups from the instance. Objects can be removed as arguments,
      * two.remove(o1, o2, oN), or as an array depicted above.
      */
-    fun remove(vararg objects: Any): Unit
+    fun remove(vararg objects: Two.Path): Unit
+
+    /**
+     * Remove one or many shapes / groups from the instance. Objects can be removed as arguments,
+     * two.remove(o1, o2, oN), or as an array depicted above.
+     */
+    fun remove(vararg objects: Two.Group): Unit
 
     /**
      * Removes all objects from the instance's scene. If you intend to have the browser garbage collect this,
@@ -949,37 +961,41 @@ open external class Two (params: TwoConstructionParams /* null */) {
     }
 }
 
-external interface TwoConstructionParams {
+/**
+ * Construction parameters for an instance of Two
+ */
+class TwoConstructionParams(
+        /**
+         * The rendering mode of this Two instance. Can be SVG, Canvas, or WebGL
+         */
+        var type: Two.Types? = undefined,
+        /**
+         * Set the width of the drawing space. Disregarded if params.fullscreen is set to true. Default width is 640 pixels.
+         */
+        var width: Double? = undefined,
+        /**
+         * Set the height of the drawing space. Disregarded if params.fullscreen is set to true. Default height is 480 pixels.
+         */
+        var height: Double? = undefined,
+        /**
+         * A boolean to automatically add the instance to draw on requestAnimationFrame.
+         * This is a convenient substitute so you don't have to call two.play().
+         */
+        var autostart: Boolean? = undefined,
 
-    var type: Two.Types?
-    /**
-     * Set the width of the drawing space. Disregarded if params.fullscreen is set to true. Default width is 640 pixels.
-     */
-    var width: Double?
-    /**
-     * Set the height of the drawing space. Disregarded if params.fullscreen is set to true. Default height is 480 pixels.
-     */
-    var height: Double?
-    /**
-     * A boolean to automatically add the instance to draw on requestAnimationFrame.
-     * This is a convenient substitute so you don't have to call two.play().
-     */
-    var autostart: Boolean?
+        /**
+         * A boolean to set the drawing space of the instance to be fullscreen or not.
+         * If set to true then width and height parameters will not be respected.
+         */
+        var fullscreen: Boolean? = undefined,
 
-    /**
-     * A boolean to set the drawing space of the instance to be fullscreen or not.
-     * If set to true then width and height parameters will not be respected.
-     */
-    var fullscreen: Boolean?
+        /**
+         * Set the resolution ratio for canvas and webgl renderers.
+         * If left blank two.js automatically infers the ratio based on the devicePixelRatio api.
+         */
+        var raiot: Double? = undefined)
 
-    /**
-     * Set the resolution ratio for canvas and webgl renderers.
-     * If left blank two.js automatically infers the ratio based on the devicePixelRatio api.
-     */
-    var raiot: Double?
-}
-
-external interface BoundingRect {
+external class BoundingRect {
     var top: Double
     var left: Double
     var right: Double

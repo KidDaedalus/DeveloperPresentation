@@ -1,6 +1,7 @@
 package com.github.kiddaedalus.presentation
 
 import org.two.js.Two
+import kotlin.math.sqrt
 
 /**
  * A '+' symbol
@@ -11,6 +12,7 @@ class Plus(x: Double,
            var thickness: Double = armLength/3):
         Two.Path(
                 // Twelve anchor points fully specify a '+'
+                // The last one closes the shape
             Array(13, {_ -> anchor()}),
             true, false) {
     init {
@@ -46,19 +48,19 @@ class Tableau(var x: Double,
               val plusSize: Double = 30.0,
               val offset: Double = plusSize*2.5,
               val semiOffset: Double = plusSize*1.6,
-              val middlePlus: Plus = Plus(x, y, plusSize).apply { fill = tabOrange },
+              val middlePlus: Plus = Plus(0.0, 0.0, plusSize).apply { fill = tabOrange },
 
               var cornerScaling: Double = 0.87,
-              val upperLeftPlus:  Plus = Plus(x - semiOffset, y - semiOffset, plusSize * cornerScaling).apply { fill = tabOrangeLight},
-              val upperRightPlus: Plus = Plus(x + semiOffset, y - semiOffset, plusSize * cornerScaling).apply { fill = tabBlueLight},
-              val lowerLeftPlus:  Plus = Plus(x - semiOffset, y + semiOffset, plusSize * cornerScaling).apply { fill = tabRed},
-              val lowerRightPlus: Plus = Plus(x + semiOffset, y + semiOffset, plusSize * cornerScaling).apply { fill = tabBlue},
+              val upperLeftPlus:  Plus = Plus(- semiOffset,  - semiOffset, plusSize * cornerScaling).apply { fill = tabOrangeLight},
+              val upperRightPlus: Plus = Plus(+ semiOffset,  - semiOffset, plusSize * cornerScaling).apply { fill = tabBlueLight},
+              val lowerLeftPlus:  Plus = Plus(- semiOffset,  + semiOffset, plusSize * cornerScaling).apply { fill = tabRed},
+              val lowerRightPlus: Plus = Plus(+ semiOffset,  + semiOffset, plusSize * cornerScaling).apply { fill = tabBlue},
 
               var tertiaryScaling: Double = 0.6,
-              val bottomPlus:        Plus = Plus(x, y - offset, plusSize * tertiaryScaling ).apply { fill = tabBlueLight},
-              val leftPlus:       Plus = Plus(x - offset, y,plusSize * tertiaryScaling ).apply { fill = tabBlueLight},
-              val rightPlus:      Plus = Plus(x + offset, y,plusSize * tertiaryScaling ).apply { fill = tabBluePale},
-              val topPlus:     Plus = Plus(x, y + offset,plusSize * tertiaryScaling ).apply { fill = tabBluePale}
+              val bottomPlus:        Plus = Plus(0.0,  - offset, plusSize * tertiaryScaling ).apply { fill = tabBlueLight},
+              val leftPlus:       Plus = Plus(- offset, 0.0,plusSize * tertiaryScaling ).apply { fill = tabBlueLight},
+              val rightPlus:      Plus = Plus(+ offset, 0.0,plusSize * tertiaryScaling ).apply { fill = tabBluePale},
+              val topPlus:     Plus = Plus(0.0, + offset,plusSize * tertiaryScaling ).apply { fill = tabBluePale}
 ): Two.Group() {
     companion object {
         const val tabOrange = "#E9762D"
@@ -69,13 +71,54 @@ class Tableau(var x: Double,
         const val tabBlueLight = "#59879B"
     }
 
-    val allShapes: Array<Plus> = arrayOf(middlePlus, upperLeftPlus, upperRightPlus,lowerLeftPlus,
+    val allShapes: List<Plus> = listOf(middlePlus, upperLeftPlus, upperRightPlus,lowerLeftPlus,
             lowerRightPlus, topPlus,leftPlus, rightPlus,bottomPlus)
-    val cornerShapes: Array<Plus> = arrayOf(upperLeftPlus, upperRightPlus,lowerLeftPlus, lowerRightPlus)
-    val tertiaryShapes: Array<Plus> = arrayOf(topPlus, bottomPlus, leftPlus, rightPlus)
+    val cornerShapes: List<Plus> = listOf(upperLeftPlus, upperRightPlus,lowerLeftPlus, lowerRightPlus)
+    val tertiaryShapes: List<Plus> = listOf(topPlus, bottomPlus, leftPlus, rightPlus)
     init {
-
-        this.add(allShapes)
+        this.add(*allShapes.toTypedArray())
         translation.set(x, y)
+    }
+}
+
+/**
+ * An equilateral triangle
+ * x and y provide coordinates of the midpoint
+ *
+ *        / \
+ *      /     \
+ *    /  (x,y)  \
+ *  /_____________\
+ *         L
+ */
+class Triangle(x: Double, y: Double, var sideLength: Double) : Two.Path(
+        Array(4, {_ -> anchor()}), true, false) {
+
+
+    init {
+        update()
+        translation.set(x, y)
+    }
+    fun update() {
+        val halfL = 0.5 * sideLength
+
+        /**
+         * The distance from one of the corner points to the midpoint (x,y) is given by R
+         * and the shortest distance to an edge is given by r
+         *   (x,y)
+         *     | \
+         *     |   \ R
+         *   r |      \
+         *     |_________\
+         *    0.5 * sideLength
+         */
+        val R: Double = sideLength / sqrt(3.0)
+        val r: Double = R / 2
+
+        vertices[0].command = Two.Commands.move
+        vertices[0].set(-halfL, -r)
+        vertices[1].set(0.0, R)
+        vertices[2].set(halfL, r)
+        vertices[3].set(-halfL, -r)
     }
 }

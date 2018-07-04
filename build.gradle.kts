@@ -56,6 +56,7 @@ kotlinFrontend{
 }
 npm {
     dependency("two.js", "0.7.0-alpha.1")
+
     devDependency("qunit", "2.6.1")
     devDependency("karma", "2.0.4")
 }

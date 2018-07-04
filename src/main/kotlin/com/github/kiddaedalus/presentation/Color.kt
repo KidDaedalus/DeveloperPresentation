@@ -9,7 +9,8 @@ data class Color(val red: Short, val green: Short, val blue: Short, val alpha: D
     }
 
     companion object {
-        const val maxColorValue = 255
+        const val minColorValue: Short = 0
+        const val maxColorValue: Short = 255
         const val hexadecimalRadix = 16
         fun fromString(colorString: String): Color =
             when {
@@ -28,19 +29,8 @@ data class Color(val red: Short, val green: Short, val blue: Short, val alpha: D
                         "Color '$colorString' is not one of '#RRGGBB'  or 'rgba()' formats ")
             }
 
-        fun clampColorValue(value: Short) =
-                when {
-                    value < 0 -> 0
-                    value > maxColorValue -> 255
-                    else -> value
-                }
-
-        fun clampAlpha(value: Double) =
-                when {
-                    value < 0.0 -> 0.0
-                    value > 1.0 -> 1.0
-                    else -> value
-                }
+        fun clampColorValue(value: Short) = value.clamp(minColorValue, maxColorValue)
+        fun clampAlpha(value: Double) = value.clamp(0.0, 1.0)
     }
 
     fun setAlpha(value: Double) = Color(red, green, blue, value)
@@ -52,7 +42,7 @@ data class Color(val red: Short, val green: Short, val blue: Short, val alpha: D
 
 
     operator fun minus(other: Color) =
-            Color(red   = clampColorValue((red - other.red).toShort()),
+            Color(red   = (red - other.red).toShort(),
                   green = (green - other.green).toShort(),
                   blue  = (blue - other.blue).toShort())
 
@@ -67,7 +57,16 @@ data class Color(val red: Short, val green: Short, val blue: Short, val alpha: D
      * This format does not include the alpha channel
      */
     fun toHex(): String = "#" +
-            red.toString(hexadecimalRadix).padStart(2, '0').toUpperCase() +
-            green.toString(hexadecimalRadix).padStart(2, '0').toUpperCase() +
-            blue.toString(hexadecimalRadix).padStart(2, '0').toUpperCase()
+            red.toHexString() +
+            green.toHexString() +
+            blue.toHexString()
+
+    /**
+     * Return the given short as uppercase hexadecimal digits with the specified left-padding of '0'
+     * e.g.:
+     *     255.toHexString() -> "FF"
+     *     0.toHexString(4) -> "0000"
+     */
+    private fun Short.toHexString(padding: Int = 2) =
+            this.toString(hexadecimalRadix).padStart(padding, '0').toUpperCase()
 }
