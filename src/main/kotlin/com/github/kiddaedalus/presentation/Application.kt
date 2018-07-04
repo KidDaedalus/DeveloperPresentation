@@ -3,7 +3,9 @@ package com.github.kiddaedalus.presentation
 import com.github.kiddaedalus.presentation.Application.Companion.two
 import org.two.js.Two
 import org.two.js.TwoConstructionParams
+import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.document
+import kotlin.browser.window
 import kotlin.math.PI
 import kotlin.math.roundToLong
 
@@ -18,7 +20,8 @@ class Application {
 }
 
 fun main(vararg args: String) {
-    val tableau = Tableau(150.0,150.0, 40.0 )
+    val controls = ControlBar(two.width/2, two.height - 25.0)
+    val tableau = Tableau(two.width/2,150.0, 40.0 )
 
     val timeline = timeline {
         stage(
@@ -38,9 +41,20 @@ fun main(vararg args: String) {
         )
     }
 
+    // Use the keyboard to control progression through the timeline
+    window.onkeyup = { event ->
+        event as KeyboardEvent
+        when(event.key) {
+            "ArrowRight" -> {}
+            "ArrowLeft" -> {}
+            " " -> timeline.pause = !timeline.pause
+        }
+    }
+
     two.apply {
         appendTo(document.body!!)
         add(tableau)
+        add(controls)
 
         bind(Two.Events.update) {
             timeline.update()
@@ -49,6 +63,15 @@ fun main(vararg args: String) {
             tableau.cornerShapes.map { it.rotation -= PI / 240 }
             tableau.middlePlus.rotation += PI / 240
         }
+
+        bind(Two.Events.resize) {
+            // Keep things horizontally centered
+            //tableau.translation.x = two.width/2
+
+            // Keep controls pinned to the bottom-middle of the screen
+            controls.translation.set(two.width/2,two.height - 25.0)
+        }
+
         play()
     }
 }

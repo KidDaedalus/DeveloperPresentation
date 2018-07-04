@@ -31,6 +31,13 @@ data class Color(val red: Short, val green: Short, val blue: Short, val alpha: D
 
         fun clampColorValue(value: Short) = value.clamp(minColorValue, maxColorValue)
         fun clampAlpha(value: Double) = value.clamp(0.0, 1.0)
+
+
+        // Define some presets for use elsewhere
+        val white = Color(255,255,255)
+        val black = Color(0,0,0)
+        val skyBlue = Color(0,117,226)
+
     }
 
     fun setAlpha(value: Double) = Color(red, green, blue, value)
@@ -50,13 +57,13 @@ data class Color(val red: Short, val green: Short, val blue: Short, val alpha: D
      * Returns this color as a CSS rgba string
      * https://www.w3schools.com/cssref/func_rgba.asp
      */
-    fun toRgba(): String = "rgba($red,$blue,$green,$alpha)"
+    val asRgba = "rgba($red,$green,$blue,$alpha)"
 
     /**
      * Return this color as a CSS hex string #RRGGBB
      * This format does not include the alpha channel
      */
-    fun toHex(): String = "#" +
+    val asHex = "#" +
             red.toHexString() +
             green.toHexString() +
             blue.toHexString()

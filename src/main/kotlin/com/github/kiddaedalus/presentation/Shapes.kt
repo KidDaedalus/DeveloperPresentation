@@ -1,7 +1,6 @@
 package com.github.kiddaedalus.presentation
 
 import org.two.js.Two
-import kotlin.math.sqrt
 
 /**
  * A '+' symbol
@@ -43,8 +42,8 @@ class Plus(x: Double,
     }
 }
 
-class Tableau(var x: Double,
-              var y: Double,
+class Tableau(x: Double,
+              y: Double,
               val plusSize: Double = 30.0,
               val offset: Double = plusSize*2.5,
               val semiOffset: Double = plusSize*1.6,
@@ -81,44 +80,29 @@ class Tableau(var x: Double,
     }
 }
 
-/**
- * An equilateral triangle
- * x and y provide coordinates of the midpoint
- *
- *        / \
- *      /     \
- *    /  (x,y)  \
- *  /_____________\
- *         L
- */
-class Triangle(x: Double, y: Double, var sideLength: Double) : Two.Path(
-        Array(4, {_ -> anchor()}), true, false) {
-
-
-    init {
-        update()
-        translation.set(x, y)
+class ControlBar(x: Double,
+                 y: Double,
+                 val size: Double = 10.0,
+                 val backButton: Two.Path = Application.two.makeRectangle(-2*size, 0.0, size, size)
+                         .apply {
+                             fill = Color.skyBlue.asRgba
+                             stroke = Color.white.asRgba
+                         },
+                 val playPauseButton: Two.Path = Application.two.makeCircle(0.0, 0.0, size/2)
+                         .apply {
+                             fill = Color.skyBlue.asRgba
+                             stroke = Color.white.asRgba
+                         },
+                 val forwardButton: Two.Path = Application.two.makeRectangle(2*size, 0.0, size, size)
+                         .apply {
+                             fill = Color.skyBlue.asRgba
+                             stroke = Color.white.asRgba
+                         }) : Two.Group() {
+    companion object {
+        const val skyBlue = ""
     }
-    fun update() {
-        val halfL = 0.5 * sideLength
-
-        /**
-         * The distance from one of the corner points to the midpoint (x,y) is given by R
-         * and the shortest distance to an edge is given by r
-         *   (x,y)
-         *     | \
-         *     |   \ R
-         *   r |      \
-         *     |_________\
-         *    0.5 * sideLength
-         */
-        val R: Double = sideLength / sqrt(3.0)
-        val r: Double = R / 2
-
-        vertices[0].command = Two.Commands.move
-        vertices[0].set(-halfL, -r)
-        vertices[1].set(0.0, R)
-        vertices[2].set(halfL, r)
-        vertices[3].set(-halfL, -r)
+    init {
+        add(backButton, playPauseButton, forwardButton)
+        translation.set(x,y)
     }
 }
