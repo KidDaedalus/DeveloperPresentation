@@ -1,6 +1,7 @@
 package com.github.kiddaedalus.presentation
 
 import kotlin.math.roundToLong
+import kotlin.properties.Delegates
 
 class TimelineStage(private val animations: List<Animated>): List<Animated> by animations, Animated {
     override fun render(frame: Long) {
@@ -10,7 +11,9 @@ class TimelineStage(private val animations: List<Animated>): List<Animated> by a
     }
 
     override suspend fun animate(frameDurationMillis: Long) {
-        TODO("not implemented")
+        for (animation in animations) {
+            animation.animate(durationMillis)
+        }
     }
 
     override val durationFrames: Long = animations
@@ -27,7 +30,7 @@ class TimelineStage(private val animations: List<Animated>): List<Animated> by a
 fun timeline(initFun: TimelineBuilder.()->Unit ): AnimationTimeline {
     val builder = TimelineBuilder()
     builder.initFun()
-    return AnimationTimeline(builder.build())
+    return builder.build()
 }
 
 /**
@@ -35,17 +38,24 @@ fun timeline(initFun: TimelineBuilder.()->Unit ): AnimationTimeline {
  */
 class TimelineBuilder {
     private val stages: MutableList<TimelineStage> = mutableListOf()
+    private val listeners: MutableList<(AnimationTimeline)->Unit> = mutableListOf()
 
+    fun listener(listener: (AnimationTimeline)->Unit) = listeners.add(listener)
     fun stage(vararg animated: Animated) = stages.add(TimelineStage(listOf(*animated)))
     fun stage(animated: Collection<Animated>) = stages.add(TimelineStage(animated.toList()))
 
-    fun build(): List<TimelineStage> {
-        return stages.toList()
+    fun build(): AnimationTimeline {
+        return AnimationTimeline(stages.toList(), listeners)
     }
 }
 
 
-class AnimationTimeline(private val stages:  List<TimelineStage>):  List<TimelineStage> by stages {
+class AnimationTimeline(
+        private val stages:  List<TimelineStage>,
+        /**
+         * Each listener function is called when the current stage changes
+         */
+        val listeners: MutableList<(AnimationTimeline)->Unit> = mutableListOf()):  List<TimelineStage> by stages {
 
     val durationFrames: Long = stages.map { it.durationFrames }.sum()
     val durationMillis: Long = stages.map { it.durationMillis }.sum()
@@ -54,11 +64,9 @@ class AnimationTimeline(private val stages:  List<TimelineStage>):  List<Timelin
 
     var pause: Boolean = false
 
-    var currentStageIndex: Int = 0
-        private set(value) {
-            field = value.clamp(0, stages.size - 1)
-            frameCounter = 0
-        }
+    var currentStageIndex: Int by Delegates.observable(0) { _, _, _ ->
+        listeners.forEach { listenerFun -> listenerFun(this) }
+    }
 
     fun advanceStage() {
         currentStage.render(currentStage.durationFrames)

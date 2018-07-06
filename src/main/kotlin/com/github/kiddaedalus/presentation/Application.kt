@@ -20,11 +20,16 @@ class Application {
 
 fun main(vararg args: String) {
     // Create the vector art & shapes that comprise this presentation
+
     val controls = ControlBar(two.width/2, two.height - 25.0)
     val tableau = Tableau(two.width/2,150.0, 40.0 )
+    val stageCounter = Two.Text("~", two.width/2, two.height -10.0, null )
 
     // Setup a timeline of animations performed on the shapes
     val timeline = timeline {
+        listener {
+            stageCounter.value = "${it.currentStageIndex}/${it.size}"
+        }
         stage(
                 tableau.middlePlus.appear(1500L),
                 tableau.cornerShapes.appear(1000L),
@@ -43,12 +48,14 @@ fun main(vararg args: String) {
                 tableau.cornerShapes.appear()
         )
     }
+    stageCounter
 
     // Add the shapes to the two.js scenegraph and bind events to animate
     two.apply {
         appendTo(document.body!!)
         add(tableau)
         add(controls)
+        add(stageCounter)
 
         bind(Two.Events.update) {
             timeline.update()
@@ -57,8 +64,8 @@ fun main(vararg args: String) {
         bind(Two.Events.resize) {
             // Keep things horizontally centered
             tableau.translation.x = two.width/2
-            controls.translation.x = two.width/2
             controls.translation.set(two.width/2, two.height - 25.0)
+            stageCounter.translation.set(two.width/2, two.height - 10.0)
         }
 
         play()
