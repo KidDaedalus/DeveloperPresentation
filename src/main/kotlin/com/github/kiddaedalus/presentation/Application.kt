@@ -28,7 +28,7 @@ fun main(vararg args: String) {
     // Setup a timeline of animations performed on the shapes
     val timeline = timeline {
         listener {
-            stageCounter.value = "${it.currentStageIndex}/${it.size}"
+            stageCounter.value = "${it.currentStageIndex + 1}/${it.size}"
         }
         stage(
                 tableau.middlePlus.appear(1500L),
@@ -48,7 +48,7 @@ fun main(vararg args: String) {
                 tableau.cornerShapes.appear()
         )
     }
-    stageCounter
+    stageCounter.value = "1/${timeline.size}"
 
     // Add the shapes to the two.js scenegraph and bind events to animate
     two.apply {

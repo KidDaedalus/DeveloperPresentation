@@ -1,7 +1,6 @@
 package com.github.kiddaedalus.presentation
 
 import kotlin.math.roundToLong
-import kotlin.properties.Delegates
 
 class TimelineStage(private val animations: List<Animated>): List<Animated> by animations, Animated {
     override fun render(frame: Long) {
@@ -64,15 +63,23 @@ class AnimationTimeline(
 
     var pause: Boolean = false
 
-    var currentStageIndex: Int by Delegates.observable(0) { _, _, _ ->
-        listeners.forEach { listenerFun -> listenerFun(this) }
-    }
+    var currentStageIndex: Int = 0
+        private set(value) {
+            field = value.clamp(0, stages.size - 1)
+            listeners.map { listenerFun -> listenerFun(this) }
+        }
 
+    /**
+     * Skip to the next stage. Won't attempt to go past the final stage
+     */
     fun advanceStage() {
         currentStage.render(currentStage.durationFrames)
         currentStageIndex++
     }
 
+    /**
+     * Skip to the previous stage. Won't attempt to go before the first stage
+     */
     fun previousStage() {
         currentStage.render(0)
         currentStageIndex--
@@ -82,6 +89,9 @@ class AnimationTimeline(
         get() = stages[currentStageIndex]
         private set
 
+    /**
+     * Advances the timeline by a single frame
+     */
     fun update() {
         if(pause) {
             return
