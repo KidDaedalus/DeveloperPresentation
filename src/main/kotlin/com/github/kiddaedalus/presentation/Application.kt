@@ -1,17 +1,16 @@
 package com.github.kiddaedalus.presentation
 
 import com.github.kiddaedalus.presentation.Application.Companion.two
+import kotlinx.coroutines.experimental.launch
 import org.two.js.Two
 import org.two.js.TwoConstructionParams
 import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.document
 import kotlin.browser.window
-import kotlin.math.PI
-import kotlin.math.roundToLong
 
 class Application {
     companion object {
-        val two = Two(TwoConstructionParams(fullscreen = true))
+        val two = Two(TwoConstructionParams(fullscreen = true, type = Two.Types.svg))
         // two.js calls update() 60 times per second when told to play, so this is effectively fixed
         const val framesPerSecond: Long  = 60L
         const val framesPerMilli: Double = framesPerSecond / 1000.0
@@ -20,20 +19,24 @@ class Application {
 }
 
 fun main(vararg args: String) {
+    // Create the vector art & shapes that comprise this presentation
     val controls = ControlBar(two.width/2, two.height - 25.0)
     val tableau = Tableau(two.width/2,150.0, 40.0 )
 
+    // Setup a timeline of animations performed on the shapes
     val timeline = timeline {
         stage(
-                tableau.middlePlus.appear(3000L),
-                tableau.cornerShapes.appear(2000L),
-                tableau.tertiaryShapes.appear(1000L)
+                tableau.middlePlus.appear(1500L),
+                tableau.cornerShapes.appear(1000L),
+                tableau.tertiaryShapes.appear(500L)
         )
+        stage(tableau.cornerShapes.spin())
         stage(
                 tableau.middlePlus.disappear()
         )
         stage(
                 tableau.middlePlus.appear(),
+                tableau.middlePlus.spin(),
                 tableau.cornerShapes.disappear()
         )
         stage(
@@ -41,16 +44,7 @@ fun main(vararg args: String) {
         )
     }
 
-    // Use the keyboard to control progression through the timeline
-    window.onkeyup = { event ->
-        event as KeyboardEvent
-        when(event.key) {
-            "ArrowRight" -> {}
-            "ArrowLeft" -> {}
-            " " -> timeline.pause = !timeline.pause
-        }
-    }
-
+    // Add the shapes to the two.js scenegraph and bind events to animate
     two.apply {
         appendTo(document.body!!)
         add(tableau)
@@ -58,20 +52,61 @@ fun main(vararg args: String) {
 
         bind(Two.Events.update) {
             timeline.update()
-
-            tableau.tertiaryShapes.map { it.rotation += PI / 120 }
-            tableau.cornerShapes.map { it.rotation -= PI / 240 }
-            tableau.middlePlus.rotation += PI / 240
         }
 
         bind(Two.Events.resize) {
             // Keep things horizontally centered
-            //tableau.translation.x = two.width/2
-
-            // Keep controls pinned to the bottom-middle of the screen
-            controls.translation.set(two.width/2,two.height - 25.0)
+            tableau.translation.x = two.width/2
+            controls.translation.x = two.width/2
+            controls.translation.set(two.width/2, two.height - 25.0)
         }
 
         play()
     }
+
+    // Setup mouse & keyboard controls
+    // Use the keyboard to control progression through the timeline
+    fun backButtonPressed() {
+        timeline.previousStage()
+        launch {
+            controls.backButton.scale(1.2, 1.0, 150L).animate()
+        }
+    }
+    fun forwardButtonPressed() {
+        timeline.advanceStage()
+        launch {
+            controls.forwardButton.scale(1.2, 1.0, 150L).animate()
+        }
+    }
+    fun playPauseButtonPressed() {
+        timeline.pause = !timeline.pause
+        launch {
+            controls.playPauseButton.scale(1.2, 1.0, 150L).animate()
+        }
+    }
+
+    // Wait for the page to load to add click events to the controls
+    // Is there a race condition here? I do not know for sure that two.js will add all elements to the DOM before
+    // the onload event fires but for now it "works on my machine"
+    window.onload = {
+        controls.backButton.domElement()?.onClick {
+            backButtonPressed()
+        }
+        controls.forwardButton.domElement()?.onClick {
+            forwardButtonPressed()
+        }
+        controls.playPauseButton.domElement()?.onClick {
+            playPauseButtonPressed()
+        }
+    }
+    window.onkeyup = { event ->
+        event as KeyboardEvent
+        when(event.key) {
+            "ArrowLeft" ->  backButtonPressed()
+            " " -> playPauseButtonPressed()
+            "ArrowRight" ->forwardButtonPressed()
+            else -> { }
+        }
+    }
+
 }

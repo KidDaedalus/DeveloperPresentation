@@ -1,6 +1,7 @@
 package com.github.kiddaedalus.presentation
 
 import org.two.js.Two
+import org.w3c.dom.Element
 import kotlin.browser.document
 import kotlin.math.roundToLong
 
@@ -41,3 +42,9 @@ fun <T : Comparable<T>> T.clamp(min: T, max: T): T =
             this > max -> max
             else -> this
         }
+
+/**
+ * Gets the DOM element associated with this Two.Path
+ * Only expected to work when rendering to SVG as paths on canvas or WebGL don't have DOM elements so far as I know
+ */
+fun Two.Path.domElement(): Element? = document.getElementById(this.id)

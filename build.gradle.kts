@@ -34,6 +34,7 @@ val kotlinVersion = "1.2.51"
 dependencies {
     compile ("org.jetbrains.kotlin:kotlin-stdlib-js:$kotlinVersion")
 	compile ("org.jetbrains.kotlinx:kotlinx-html-js:0.6.6")
+    compile ("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:0.23.4")
 
     testCompile("org.jetbrains.kotlin:kotlin-test-js:$kotlinVersion")
 }

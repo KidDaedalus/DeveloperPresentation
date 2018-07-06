@@ -3,10 +3,14 @@ package com.github.kiddaedalus.presentation
 import kotlin.math.roundToLong
 
 class TimelineStage(private val animations: List<Animated>): List<Animated> by animations, Animated {
-    override fun animateForFrame(frame: Long) {
+    override fun render(frame: Long) {
         animations.map {
-            it.animateForFrame(frame)
+            it.render(frame)
         }
+    }
+
+    override suspend fun animate(frameDurationMillis: Long) {
+        TODO("not implemented")
     }
 
     override val durationFrames: Long = animations
@@ -51,7 +55,20 @@ class AnimationTimeline(private val stages:  List<TimelineStage>):  List<Timelin
     var pause: Boolean = false
 
     var currentStageIndex: Int = 0
-        private set(value) { field = value.clamp(0, stages.size - 1) }
+        private set(value) {
+            field = value.clamp(0, stages.size - 1)
+            frameCounter = 0
+        }
+
+    fun advanceStage() {
+        currentStage.render(currentStage.durationFrames)
+        currentStageIndex++
+    }
+
+    fun previousStage() {
+        currentStage.render(0)
+        currentStageIndex--
+    }
 
     var currentStage: TimelineStage = stages[currentStageIndex]
         get() = stages[currentStageIndex]
@@ -70,7 +87,7 @@ class AnimationTimeline(private val stages:  List<TimelineStage>):  List<Timelin
             frameCounter = 0
 
         }
-        currentStage.animateForFrame(frameCounter)
+        currentStage.render(frameCounter)
 
         frameCounter++
     }

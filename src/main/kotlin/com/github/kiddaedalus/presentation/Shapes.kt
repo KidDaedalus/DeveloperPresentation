@@ -42,6 +42,9 @@ class Plus(x: Double,
     }
 }
 
+/**
+ * The corporate logo of Tableau Software
+ */
 class Tableau(x: Double,
               y: Double,
               val plusSize: Double = 30.0,
@@ -80,6 +83,9 @@ class Tableau(x: Double,
     }
 }
 
+/**
+ * A Group of three buttons, back, play/pause, forward, arranged horizontally in that order
+ */
 class ControlBar(x: Double,
                  y: Double,
                  val size: Double = 10.0,
@@ -98,9 +104,6 @@ class ControlBar(x: Double,
                              fill = Color.skyBlue.asRgba
                              stroke = Color.white.asRgba
                          }) : Two.Group() {
-    companion object {
-        const val skyBlue = ""
-    }
     init {
         add(backButton, playPauseButton, forwardButton)
         translation.set(x,y)
