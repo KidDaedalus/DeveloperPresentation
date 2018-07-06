@@ -62,6 +62,10 @@ npm {
     devDependency("karma", "2.0.4")
 }
 
+kotlin {
+    experimental.coroutines =  org.jetbrains.kotlin.gradle.dsl.Coroutines.ENABLE
+}
+
 val compileKotlin = tasks.getByName("compileKotlin2Js") {
     this as KotlinJsCompile
     kotlinOptions {

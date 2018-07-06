@@ -36,6 +36,7 @@ fun main(vararg args: String) {
                 tableau.tertiaryShapes.appear(500L)
         )
         stage(tableau.cornerShapes.spin())
+        pause()
         stage(
                 tableau.middlePlus.disappear()
         )

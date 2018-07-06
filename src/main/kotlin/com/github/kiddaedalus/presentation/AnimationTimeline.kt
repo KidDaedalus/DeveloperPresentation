@@ -1,32 +1,10 @@
 package com.github.kiddaedalus.presentation
 
-import kotlin.math.roundToLong
-
-class TimelineStage(private val animations: List<Animated>): List<Animated> by animations, Animated {
-    override fun render(frame: Long) {
-        animations.map {
-            it.render(frame)
-        }
-    }
-
-    override suspend fun animate(frameDurationMillis: Long) {
-        for (animation in animations) {
-            animation.animate(durationMillis)
-        }
-    }
-
-    override val durationFrames: Long = animations
-            .map {it.durationFrames}
-            .max() ?: 0
-
-    override val durationMillis: Long = (durationFrames * Application.framesPerMilli).roundToLong()
-
-}
-
 /**
  * DSL for creating an AnimationTimeline
  */
 fun timeline(initFun: TimelineBuilder.()->Unit ): AnimationTimeline {
+
     val builder = TimelineBuilder()
     builder.initFun()
     return builder.build()
@@ -40,8 +18,9 @@ class TimelineBuilder {
     private val listeners: MutableList<(AnimationTimeline)->Unit> = mutableListOf()
 
     fun listener(listener: (AnimationTimeline)->Unit) = listeners.add(listener)
-    fun stage(vararg animated: Animated) = stages.add(TimelineStage(listOf(*animated)))
-    fun stage(animated: Collection<Animated>) = stages.add(TimelineStage(animated.toList()))
+    fun pause() = stages.add(PausingStage())
+    fun stage(vararg animated: Animated) = stages.add(AnimatedStage(listOf(*animated)))
+    fun stage(animated: Collection<Animated>) = stages.add(AnimatedStage(animated.toList()))
 
     fun build(): AnimationTimeline {
         return AnimationTimeline(stages.toList(), listeners)
@@ -96,17 +75,22 @@ class AnimationTimeline(
         if(pause) {
             return
         }
-        /**
-         * If the currently playing stage has run its course, advance to the next stage, pausing at the very end
-         */
-        if(frameCounter > currentStage.durationFrames &&
-           currentStage != stages.last()) {
-            currentStageIndex++
-            frameCounter = 0
+        when(currentStage) {
+            is PausingStage -> return
+            is AnimatedStage -> {
+                /**
+                 * If the currently playing stage has run its course, advance to the next stage, pausing at the very end
+                 */
+                if(frameCounter > currentStage.durationFrames &&
+                        currentStage != stages.last()) {
+                    currentStageIndex++
+                    frameCounter = 0
 
+                }
+                currentStage.render(frameCounter)
+
+                frameCounter++
+            }
         }
-        currentStage.render(frameCounter)
-
-        frameCounter++
     }
 }
