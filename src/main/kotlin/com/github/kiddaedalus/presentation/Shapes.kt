@@ -109,3 +109,5 @@ class ControlBar(x: Double,
         translation.set(x,y)
     }
 }
+
+//class TriagnleIsoscelesRight(x: Double, y: Double) : Two.Group()

@@ -31,10 +31,44 @@ class AnimatedStage(private val animations: List<Animated>): TimelineStage(), Li
 }
 
 /**
- * A no-op stage that is intended to be manually advanced past
+ * A no-op stage that must be manually advanced past
  */
 class PausingStage(override val durationMillis: Long = Long.MAX_VALUE) : TimelineStage() {
     override val durationFrames: Long = ( durationMillis * Application.framesPerMilli).roundToLong()
     override suspend fun animate(frameDurationMillis: Long) { }
     override fun render(frame: Long) { }
+}
+
+/**
+ * A stage that repeats, potentially indefinitely
+ */
+class RepeatingStage(val repetitions: Int = 2, private val animations: List<Animated> ) : TimelineStage(), Animated {
+    override fun render(frame: Long) {
+        val frameToRender = if(frame > durationFrames) {
+            durationSingleRepetitionFrames
+        } else {
+            frame % durationSingleRepetitionFrames
+        }
+
+        animations.map {
+            it.render(frameToRender)
+        }
+    }
+    override suspend fun animate(frameDurationMillis: Long) {
+        TODO("I don't think I will be calling this function anywhere...")
+    }
+
+    /**
+     * The duration of a single repetition
+     */
+    val durationSingleRepetitionFrames: Long = animations
+            .map {it.durationFrames}
+            .max() ?: 0L
+
+    /**
+     * The total duration of the repeating stage, including all repetitions
+     */
+    override val durationFrames: Long  = durationSingleRepetitionFrames.times(repetitions)
+
+    override val durationMillis: Long = (durationFrames * Application.framesPerMilli).roundToLong()
 }

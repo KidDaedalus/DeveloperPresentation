@@ -20,7 +20,7 @@ class TimelineBuilder {
     fun listener(listener: (AnimationTimeline)->Unit) = listeners.add(listener)
     fun pause() = stages.add(PausingStage())
     fun stage(vararg animated: Animated) = stages.add(AnimatedStage(listOf(*animated)))
-    fun stage(animated: Collection<Animated>) = stages.add(AnimatedStage(animated.toList()))
+    fun repeating(repetitions: Int = Int.MAX_VALUE, vararg animated: Animated) = stages.add(RepeatingStage(repetitions, listOf(*animated)))
 
     fun build(): AnimationTimeline {
         return AnimationTimeline(stages.toList(), listeners)
@@ -77,12 +77,12 @@ class AnimationTimeline(
         }
         when(currentStage) {
             is PausingStage -> return
-            is AnimatedStage -> {
+            else -> {
                 /**
                  * If the currently playing stage has run its course, advance to the next stage, pausing at the very end
                  */
                 if(frameCounter > currentStage.durationFrames &&
-                        currentStage != stages.last()) {
+                   currentStage != stages.last()) {
                     currentStageIndex++
                     frameCounter = 0
 

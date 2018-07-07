@@ -20,7 +20,6 @@ class Application {
 
 fun main(vararg args: String) {
     // Create the vector art & shapes that comprise this presentation
-
     val controls = ControlBar(two.width/2, two.height - 25.0)
     val tableau = Tableau(two.width/2,150.0, 40.0 )
     val stageCounter = Two.Text("~", two.width/2, two.height -10.0, null )
@@ -48,6 +47,7 @@ fun main(vararg args: String) {
         stage(
                 tableau.cornerShapes.appear()
         )
+        repeating(3, tableau.allShapes.spin(0.5, 2000L))
     }
     stageCounter.value = "1/${timeline.size}"
 
