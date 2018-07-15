@@ -29,6 +29,7 @@ fun main(vararg args: String) {
         listener {
             stageCounter.value = "${it.currentStageIndex + 1}/${it.size}"
         }
+        slide("Hello", "World")
         stage(
                 tableau.middlePlus.appear(1500L),
                 tableau.cornerShapes.appear(1000L),
@@ -47,7 +48,7 @@ fun main(vararg args: String) {
         stage(
                 tableau.cornerShapes.appear()
         )
-        repeating(3, tableau.allShapes.spin(0.5, 2000L))
+        repeating(tableau.allShapes.spin(0.5, 2000L))
     }
     stageCounter.value = "1/${timeline.size}"
 

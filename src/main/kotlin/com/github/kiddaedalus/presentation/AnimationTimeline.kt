@@ -1,5 +1,7 @@
 package com.github.kiddaedalus.presentation
 
+import org.two.js.Two
+
 /**
  * DSL for creating an AnimationTimeline
  */
@@ -13,14 +15,37 @@ fun timeline(initFun: TimelineBuilder.()->Unit ): AnimationTimeline {
 /**
  * Builder for AnimationTimeline to be used with the `timeline` DSL
  */
-class TimelineBuilder {
+class TimelineBuilder(val two: Two = Application.two) {
+    enum class BulletListType {
+        Unordered,
+        Ordered,
+        Plain
+    }
+
     private val stages: MutableList<TimelineStage> = mutableListOf()
     private val listeners: MutableList<(AnimationTimeline)->Unit> = mutableListOf()
 
     fun listener(listener: (AnimationTimeline)->Unit) = listeners.add(listener)
     fun pause() = stages.add(PausingStage())
     fun stage(vararg animated: Animated) = stages.add(AnimatedStage(listOf(*animated)))
-    fun repeating(repetitions: Int = Int.MAX_VALUE, vararg animated: Animated) = stages.add(RepeatingStage(repetitions, listOf(*animated)))
+    fun stage(animated: List<Animated>) = stages.add(AnimatedStage(animated))
+    fun repeating(vararg animated: Animated, repetitions: Int = Int.MAX_VALUE) = stages.add(RepeatingStage(repetitions, listOf(*animated)))
+    fun slide(vararg lines: String, listType: BulletListType = BulletListType.Unordered) {
+        val vectorizedLines = lines.map {
+            Two.Text(it, x = 10.0, y = 0.0, styles = null).apply {
+                noFill()
+            }
+        }
+        vectorizedLines.forEachIndexed { i, line ->
+            line.translation.y = i * 10.0
+            two.add(line)
+            stage(line.appear(1000L))
+        }
+        val plus = Plus(two.width - 10.0, two.height - 10.0, 10.0).apply { fill = Color.skyBlue.asHex}
+        two.add(plus)
+        repeating(plus.spin())
+        stage( vectorizedLines.map{ it.disappear() } )
+    }
 
     fun build(): AnimationTimeline {
         return AnimationTimeline(stages.toList(), listeners)
