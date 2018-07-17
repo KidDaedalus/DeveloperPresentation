@@ -32,13 +32,13 @@ fun main(vararg args: String) {
         listener {
             stageCounter.value = "${it.currentStageIndex + 1}/${it.size}"
         }
+        slide("Hello", "World")
         stage(
                 tableau.middlePlus.appear(1500L),
                 tableau.cornerShapes.appear(1000L),
                 tableau.tertiaryShapes.appear(500L)
         )
         stage(tableau.cornerShapes.spin())
-        pause()
         stage(
                 tableau.middlePlus.disappear()
         )

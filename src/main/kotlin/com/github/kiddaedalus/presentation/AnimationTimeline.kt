@@ -1,5 +1,7 @@
 package com.github.kiddaedalus.presentation
 
+import org.two.js.Two
+
 /**
  * DSL for creating an AnimationTimeline
  */
@@ -12,7 +14,13 @@ fun timeline(initFun: TimelineBuilder.()->Unit ): AnimationTimeline {
 /**
  * Builder for AnimationTimeline to be used with the `timeline` DSL
  */
-class TimelineBuilder {
+class TimelineBuilder(val two: Two = Application.two) {
+    enum class BulletListType {
+        Unordered,
+        Ordered,
+        Plain
+    }
+
     private val stages: MutableList<TimelineStage> = mutableListOf()
     private val listeners: MutableList<(AnimationTimeline)->Unit> = mutableListOf()
 
@@ -29,6 +37,7 @@ class TimelineBuilder {
      * Add a typical animation stage to the timeline
      */
     fun stage(vararg animated: Animated) = stages.add(AnimatedStage(listOf(*animated)))
+    fun stage(animated: List<Animated>) = stages.add(AnimatedStage(animated))
     /**
      * Add a stage that repeats the specified number of times
      */
@@ -37,6 +46,27 @@ class TimelineBuilder {
      * Add a stage that repeats (effectively) forever, necessitating manual advancement to go past it
      */
     fun repeating(vararg animated: Animated) = stages.add(RepeatingStage(Int.MAX_VALUE, listOf(*animated)))
+    fun repeating(vararg animated: Animated, repetitions: Int = Int.MAX_VALUE) = stages.add(RepeatingStage(repetitions, listOf(*animated)))
+
+    /**
+     * Quick way to create several stages of text
+     */
+    fun slide(vararg lines: String, listType: BulletListType = BulletListType.Unordered) {
+        val vectorizedLines = lines.map {
+            Two.Text(it, x = 20.0, y = 0.0, styles = null).apply {
+                svgOpacity = 0.0
+            }
+        }
+        vectorizedLines.forEachIndexed { i, line ->
+            line.translation.y = (i + 1) * 20.0
+            two.add(line)
+            stage(line.appear(1000L))
+        }
+        val plus = Plus(two.width - 20.0, two.height - 20.0, 20.0).apply { fill = Color.skyBlue.asRgba }//svgOpacity = 0.0 }
+        two.add(plus)
+        repeating(plus.spin())
+        stage( vectorizedLines.map{ it.disappear() }.plus(plus.disappear()) )
+    }
 
     fun build(): AnimationTimeline {
         return AnimationTimeline(stages.toList(), listeners)
@@ -62,6 +92,7 @@ class AnimationTimeline(
         private set(value) {
             field = value.clamp(0, stages.size - 1)
             listeners.map { listenerFun -> listenerFun(this) }
+            frameCounter = 0
         }
 
     /**
