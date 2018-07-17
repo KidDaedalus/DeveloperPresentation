@@ -56,59 +56,59 @@ open external class Two (params: TwoConstructionParams /* null */) {
      * A convenient method to append the instance's dom element to the page.
      * It's required to add the instance's dom element to the page in order to see anything drawn.
      */
-    fun appendTo(element: HTMLElement): Unit
+    fun appendTo(element: HTMLElement)
 
     /**
      * This method adds the instance to the requestAnimationFrame loop. In affect enabling animation for this instance.
      */
-    fun play(): Unit
+    fun play()
 
     /**
      * This method removes the instance from the requestAnimationFrame loop. In affect halting animation for this instance.
      */
-    fun pause(): Unit
+    fun pause()
 
     /**
      * This method updates the dimensions of the drawing space, increments the tick for animation, and finally calls
      * two.render(). When using the built-in requestAnimationFrame hook, two.play(), this method is invoked for you
      * automatically.
      */
-    fun update(): Unit
+    fun update()
 
     /**
      * This method makes the instance's renderer draw. It should be unnecessary to invoke this yourself at anytime.
      */
-    fun render(): Unit
+    fun render()
 
     /**
      * Add one or many shapes / groups to the instance.
      * Objects can be added as arguments, two.add(o1, o2, oN), or as an array depicted above.
      */
-    fun add(vararg objects: Two.Path): Unit
+    fun add(vararg objects: Two.Path)
 
     /**
      * Add one or many shapes / groups to the instance.
      * Objects can be added as arguments, two.add(o1, o2, oN), or as an array depicted above.
      */
-    fun add(vararg objects: Two.Group): Unit
+    fun add(vararg objects: Two.Group)
 
     /**
      * Remove one or many shapes / groups from the instance. Objects can be removed as arguments,
      * two.remove(o1, o2, oN), or as an array depicted above.
      */
-    fun remove(vararg objects: Two.Path): Unit
+    fun remove(vararg objects: Two.Path)
 
     /**
      * Remove one or many shapes / groups from the instance. Objects can be removed as arguments,
      * two.remove(o1, o2, oN), or as an array depicted above.
      */
-    fun remove(vararg objects: Two.Group): Unit
+    fun remove(vararg objects: Two.Group)
 
     /**
      * Removes all objects from the instance's scene. If you intend to have the browser garbage collect this,
      * don't forget to delete the references in your application as well.
      */
-    fun clear(): Unit
+    fun clear()
 
     /**
      * Draws a line between two coordinates to the instance's drawing space where x1, y1 are the x, y values for the
@@ -173,7 +173,6 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  open is an optional boolean describing whether or not to expose endpoints. It is imperative if you generate
      *  curves this way to make the list of points Two.Anchor's.
      */
-    //TODO: declare type bindings for Path
     fun makeCurve(vararg coordinates: Double): Path
     fun makeCurve(vararg coordinates: Double, open: Boolean): Path
 
@@ -186,7 +185,6 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  open is an optional boolean describing whether or not to expose endpoints. It is imperative if you generate
      *  curves this way to make the list of points Two.Anchor's.
      */
-    //TODO: declare type bindings for Path
     fun makePath(vararg coordinates: Double): Path
 
     /**

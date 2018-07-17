@@ -19,6 +19,9 @@ class Application {
 }
 
 fun main(vararg args: String) {
+    val body = document.body!!
+    body.style.background = Color.white.asHex
+
     // Create the vector art & shapes that comprise this presentation
     val controls = ControlBar(two.width/2, two.height - 25.0)
     val tableau = Tableau(two.width/2,150.0, 40.0 )
@@ -47,13 +50,13 @@ fun main(vararg args: String) {
         stage(
                 tableau.cornerShapes.appear()
         )
-        repeating(3, tableau.allShapes.spin(0.5, 2000L))
+        repeating(tableau.allShapes.spin(0.5, 2000L))
     }
     stageCounter.value = "1/${timeline.size}"
 
     // Add the shapes to the two.js scenegraph and bind events to animate
     two.apply {
-        appendTo(document.body!!)
+        appendTo(body)
         add(tableau)
         add(controls)
         add(stageCounter)
@@ -96,6 +99,7 @@ fun main(vararg args: String) {
     // Wait for the page to load to add click events to the controls
     // Is there a race condition here? I do not know for sure that two.js will add all elements to the DOM before
     // the onload event fires but for now it "works on my machine"
+    //TODO: Figure out how to re-wire these when Webpack does a hot-replace, or decide that it does not matter
     window.onload = {
         controls.backButton.domElement()?.onClick {
             backButtonPressed()
