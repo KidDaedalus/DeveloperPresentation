@@ -16,7 +16,7 @@ Wherein I put in a lot of work with kotlin and two.js to avoid using powerpoint 
   * Companies that need Technology
   * All other
 * The Hiring Process
-  0. Head Start: Current employee recommends you   
+  0. Head Start: Current employee recommends you... but not all referrals are created equal
   1. Recruiters and Hiring Mangers sort resumes
   2. Recruiter conducts interpersonal, cultural phone interview
   3. Engineer conducts technical phone screen

@@ -1,7 +1,6 @@
 package com.github.kiddaedalus.presentation
 
 import org.two.js.Two
-import org.two.js.TwoRenderable
 
 /**
  * DSL for creating an AnimationTimeline
@@ -47,20 +46,18 @@ class TimelineBuilder(val two: Two = Application.two) {
      * Quick way to create several stages of text
      */
     fun slide(vararg lines: String) {
-        val vectorizedLines = lines.map {
+        val vectorizedText = lines.map {
             Two.Text(it, x = 20.0, y = 0.0, styles = null).apply {
                 svgOpacity = 0.0
             }
         }
-        vectorizedLines.forEachIndexed { i, line ->
+        vectorizedText.forEachIndexed { i, line ->
             line.translation.y = (i + 1) * 20.0
-            //two.add(line)
-            stage(line.appear(1000L))
+            two.add(line)
+            stage(line.appear(100L))
+            pause()
         }
-        val plus = Plus(two.width - 20.0, two.height - 20.0, 20.0).apply { fill = Color.skyBlue.asRgba }//svgOpacity = 0.0 }
-        //two.add(plus)
-        repeating(plus.spin())
-        stage( vectorizedLines.map{ it.disappear() }.plus(plus.disappear()) )
+        stage( vectorizedText.disappear(100L) )
     }
 
     fun build(): AnimationTimeline {

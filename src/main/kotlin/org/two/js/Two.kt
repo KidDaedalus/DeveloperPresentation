@@ -21,7 +21,7 @@ external interface TwoRenderable {
     var rotation: Double
     var scale: Double
     var translation: Two.Vector
-    var parent: Two.Group
+    var parent: Two.Group?
     fun clone(): TwoRenderable
     fun center()
     fun getBoundingClientRect(shallow: Boolean): BoundingRect
@@ -336,7 +336,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
         /**
          * A reference to the Two.Group that contains this instance.
          */
-        override var parent: Group
+        override var parent: Group?
 
         /**
          * A Two.Utils.Collection of Two.Anchors that is two-way databound. Individual vertices may be manipulated.
@@ -587,7 +587,7 @@ open external class Two (params: TwoConstructionParams /* null */) {
         /**
          * A reference to the Two.Group that contains this instance.
          */
-        override var parent: Group
+        override var parent: Group?
 
         /**
          * A reference to the Two.Path that masks the content within the group. Automatically sets the referenced

@@ -2,6 +2,11 @@ package com.github.kiddaedalus.presentation
 
 import com.github.kiddaedalus.presentation.Application.Companion.two
 import kotlinx.coroutines.experimental.launch
+import kotlinx.html.dom.append
+import kotlinx.html.dom.create
+import kotlinx.html.id
+import kotlinx.html.js.div
+import kotlinx.html.style
 import org.two.js.Two
 import org.two.js.TwoConstructionParams
 import org.two.js.TwoRenderable
@@ -20,8 +25,29 @@ class Application {
 }
 
 fun main(vararg args: String) {
-    val body = document.body!!
-    body.style.background = Color.white.asHex
+    // Configure the DOM
+    val leftMargin = document.create.div {id = "leftMargin"}.apply {
+        style.background = Color.skyBlue.asHex
+        style.height = "100%"
+        style.width = "20%"
+        style.cssFloat = "left"
+    }
+    val contentArea = document.create.div { id = "contentArea"}.apply {
+        style.height = "100%"
+        style.width = "60%"
+        style.cssFloat = "left"
+    }
+    val rightMargin = document.create.div { id = "rightMargin" }.apply {
+        style.background = Color.skyBlue.asHex
+        style.height = "100%"
+        style.width = "20%"
+        style.cssFloat = "left"
+    }
+
+    val body = document.body!!.apply {
+        style.background = Color.white.asHex
+        append(leftMargin,contentArea,rightMargin)
+    }
 
     // Create the vector art & shapes that comprise this presentation
     val controls = ControlBar(two.width/2, two.height - 25.0)
@@ -58,15 +84,16 @@ fun main(vararg args: String) {
 
     // Add the shapes to the two.js scenegraph and bind events to animate
     two.apply {
-        appendTo(body)
+        appendTo(contentArea)
         add(controls)
         add(stageCounter)
+        add(tableau)
 
         // Add all the shapes used in the presentation to the scenegraph
         allShapes.map {
             // Make them invisible to start with until something makes the shape appear
             it.scale = 0.0
-            add(it)
+            //add(it)
         }
 
         bind(Two.Events.update) {
