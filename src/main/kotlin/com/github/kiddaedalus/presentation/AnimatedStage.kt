@@ -1,6 +1,8 @@
 package com.github.kiddaedalus.presentation
 
 import kotlinx.coroutines.experimental.launch
+import org.two.js.Two
+import org.two.js.TwoRenderable
 import kotlin.math.roundToLong
 
 sealed class TimelineStage : Animated
@@ -9,6 +11,9 @@ sealed class TimelineStage : Animated
  * A typical stage containing potentially several animations which are played concurrently
  */
 class AnimatedStage(private val animations: List<Animated>): TimelineStage(), List<Animated> by animations {
+    override val shapes: List<Two.Path>
+        get() = animations.flatMap { it.shapes }
+
     override fun render(frame: Long) {
         animations.map {
             it.render(frame)
@@ -34,6 +39,7 @@ class AnimatedStage(private val animations: List<Animated>): TimelineStage(), Li
  * A no-op stage that must be manually advanced past
  */
 class PausingStage(override val durationMillis: Long = Long.MAX_VALUE) : TimelineStage() {
+    override val shapes: List<Two.Path> = listOf()
     override val durationFrames: Long = ( durationMillis * Application.framesPerMilli).roundToLong()
     override suspend fun animate(frameDurationMillis: Long) { }
     override fun render(frame: Long) { }
@@ -43,6 +49,9 @@ class PausingStage(override val durationMillis: Long = Long.MAX_VALUE) : Timelin
  * A stage that repeats, potentially indefinitely
  */
 class RepeatingStage(val repetitions: Int = 2, private val animations: List<Animated> ) : TimelineStage(), Animated {
+    override val shapes: List<Two.Path>
+        get() = animations.flatMap { it.shapes }
+
     override fun render(frame: Long) {
         val frameToRender = if(frame > durationFrames) {
             durationSingleRepetitionFrames

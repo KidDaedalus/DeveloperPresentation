@@ -1,6 +1,7 @@
 package com.github.kiddaedalus.presentation
 
 import org.two.js.Two
+import org.two.js.TwoRenderable
 import org.w3c.dom.Element
 import kotlin.browser.document
 import kotlin.math.roundToLong
@@ -18,7 +19,7 @@ fun anchor(x: Double, y: Double, command: Two.Commands = Two.Commands.line): Two
 /**
  * For some reason setting opacity through the 'opacity' property doesn't work...
  */
-var Two.Path.svgOpacity: Double
+var TwoRenderable.svgOpacity: Double
     get() {
         val element = document.getElementById(this.id)
         return element?.getAttribute("fill-opacity")?.toDouble() ?: 0.0
@@ -47,4 +48,4 @@ fun <T : Comparable<T>> T.clamp(min: T, max: T): T =
  * Gets the DOM element associated with this Two.Path
  * Only expected to work when rendering to SVG as paths on canvas or WebGL don't have DOM elements so far as I know
  */
-fun Two.Path.domElement(): Element? = document.getElementById(this.id)
+fun TwoRenderable.domElement(): Element? = document.getElementById(this.id)

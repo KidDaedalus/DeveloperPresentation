@@ -2,6 +2,7 @@ package com.github.kiddaedalus.presentation
 
 import kotlinx.coroutines.experimental.delay
 import org.two.js.Two
+import org.two.js.TwoRenderable
 import kotlin.math.PI
 import kotlin.math.roundToLong
 
@@ -21,6 +22,12 @@ interface Animated {
      */
     fun render(frame: Long)
 
+
+    /**
+     * The shapes being animated
+     */
+    val shapes: List<Two.Path>
+
     /**
      * Animate the effect from start to finish
      * Time is kept internally and so is not guaranteed to be kept aligned with anything else
@@ -34,10 +41,15 @@ interface Animated {
  */
 const val defaultEffectDuration = 1000L
 
+/**
+ * Shorthand for a function that renders some visual effect on the basis of a percentage
+ */
+typealias RenderEffect = Two.Path.(Double) -> Unit
+
 class Animation(
         override val durationMillis: Long = defaultEffectDuration,
-        val shapes: List<Two.Path>,
-        val effect: Two.Path.(Double)->Unit) : Animated {
+        override val shapes: List<Two.Path>,
+        val effect: RenderEffect) : Animated {
 
     override val durationFrames: Long = ( durationMillis * Application.framesPerMilli).roundToLong()
 
@@ -101,8 +113,6 @@ fun Two.Path.appear(durationMillis: Long = defaultEffectDuration) =
         Animation(durationMillis, listOf(this), Two.Path::appearEffect)
 fun Collection<Two.Path>.appear(durationMillis: Long = defaultEffectDuration) =
         Animation(durationMillis, this.toList(), Two.Path::appearEffect)
-
-
 /**
  * Cause the specified shape to fade out of existence
  */

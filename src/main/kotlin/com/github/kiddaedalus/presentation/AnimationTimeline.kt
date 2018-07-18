@@ -1,6 +1,7 @@
 package com.github.kiddaedalus.presentation
 
 import org.two.js.Two
+import org.two.js.TwoRenderable
 
 /**
  * DSL for creating an AnimationTimeline
@@ -15,12 +16,6 @@ fun timeline(initFun: TimelineBuilder.()->Unit ): AnimationTimeline {
  * Builder for AnimationTimeline to be used with the `timeline` DSL
  */
 class TimelineBuilder(val two: Two = Application.two) {
-    enum class BulletListType {
-        Unordered,
-        Ordered,
-        Plain
-    }
-
     private val stages: MutableList<TimelineStage> = mutableListOf()
     private val listeners: MutableList<(AnimationTimeline)->Unit> = mutableListOf()
 
@@ -51,7 +46,7 @@ class TimelineBuilder(val two: Two = Application.two) {
     /**
      * Quick way to create several stages of text
      */
-    fun slide(vararg lines: String, listType: BulletListType = BulletListType.Unordered) {
+    fun slide(vararg lines: String) {
         val vectorizedLines = lines.map {
             Two.Text(it, x = 20.0, y = 0.0, styles = null).apply {
                 svgOpacity = 0.0
@@ -59,22 +54,23 @@ class TimelineBuilder(val two: Two = Application.two) {
         }
         vectorizedLines.forEachIndexed { i, line ->
             line.translation.y = (i + 1) * 20.0
-            two.add(line)
+            //two.add(line)
             stage(line.appear(1000L))
         }
         val plus = Plus(two.width - 20.0, two.height - 20.0, 20.0).apply { fill = Color.skyBlue.asRgba }//svgOpacity = 0.0 }
-        two.add(plus)
+        //two.add(plus)
         repeating(plus.spin())
         stage( vectorizedLines.map{ it.disappear() }.plus(plus.disappear()) )
     }
 
     fun build(): AnimationTimeline {
-        return AnimationTimeline(stages.toList(), listeners)
+        return AnimationTimeline(two, stages.toList(), listeners)
     }
 }
 
 
 class AnimationTimeline(
+        private val two: Two,
         private val stages:  List<TimelineStage>,
         /**
          * Each listener function is called when the current stage changes

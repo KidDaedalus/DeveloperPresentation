@@ -4,6 +4,7 @@ import com.github.kiddaedalus.presentation.Application.Companion.two
 import kotlinx.coroutines.experimental.launch
 import org.two.js.Two
 import org.two.js.TwoConstructionParams
+import org.two.js.TwoRenderable
 import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.document
 import kotlin.browser.window
@@ -53,13 +54,20 @@ fun main(vararg args: String) {
         repeating(tableau.allShapes.spin(0.5, 2000L))
     }
     stageCounter.value = "1/${timeline.size}"
+    val allShapes = timeline.flatMap { it.shapes }
 
     // Add the shapes to the two.js scenegraph and bind events to animate
     two.apply {
         appendTo(body)
-        add(tableau)
         add(controls)
         add(stageCounter)
+
+        // Add all the shapes used in the presentation to the scenegraph
+        allShapes.map {
+            // Make them invisible to start with until something makes the shape appear
+            it.scale = 0.0
+            add(it)
+        }
 
         bind(Two.Events.update) {
             timeline.update()

@@ -6,6 +6,30 @@ import org.w3c.dom.css.CSSImportRule
 import kotlin.math.round
 
 /**
+ * Describes the shared properties of Two.Path and Two.Group which can be used interchangeably in most circumstances.
+ * For a Group many of the properties are only useful for setting
+ */
+external interface TwoRenderable {
+    var id: String
+    var stroke: String
+    var fill: String
+    var linewidth: Double
+    var opactiy: Double
+    var cap: String
+    var join: String
+    var miter: Double
+    var rotation: Double
+    var scale: Double
+    var translation: Two.Vector
+    var parent: Two.Group
+    fun clone(): TwoRenderable
+    fun center()
+    fun getBoundingClientRect(shallow: Boolean): BoundingRect
+    fun noFill()
+    fun noStroke()
+}
+
+/**
  * https://two.js.org/#documentation
  */
 @JsModule("two.js")
@@ -247,70 +271,72 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  anchor positions yourself. Generally speaking, this isn't something you need to deal with, although some great
      *  usecases arise from this customability, e.g: advanced curve manipulation.
      */
-    open class Path(verticies: Array<Anchor>, closed: Boolean, curved: Boolean) {
+    open class Path(verticies: Array<Anchor>, closed: Boolean, curved: Boolean): TwoRenderable {
+        override fun getBoundingClientRect(shallow: Boolean): BoundingRect
+
         /**
          * The id of the path. In the svg renderer this is the same number as the id attribute given to the
          * corresponding node. i.e: if path.id = 4 then document.querySelector('#two-' + group.id) will return the
          * corresponding svg node.
          */
-        open var id: String
+        override var id: String
         /**
          * A string representing the color for the stroke of the path. All valid css representations of color are
          * accepted.
          */
-        open var stroke: String
+        override var stroke: String
         /**
          * A string representing the color for the area of the vertices. All valid css representations of color are
          * accepted.
          */
-        open var fill: String
+        override var fill: String
         /**
          * A number representing the thickness the path's strokes. Must be a positive number.
          */
-        open var linewidth: Double
+        override var linewidth: Double
         /**
          * A number representing the opacity of the path. Use strictly for setting. Must be a number 0-1.
          */
-        open var opactiy: Double
+        override var opactiy: Double
 
         /**
          * A string representing the type of stroke cap to render.
          * All applicable values can be found on the w3c spec. https://www.w3.org/TR/SVG/images/painting/linecap.svg
          * Defaults to "round".
          */
-        open var cap: String
+        override var cap: String
 
         /**
          * A string representing the type of stroke join to render. All applicable values can be found on the w3c spec.
          * https://www.w3.org/TR/SVG/images/painting/linejoin.svg
          * Defaults to "round".
          */
-        open var join: String
+        override var join: String
 
         /**
          * A number representing the miter limit for the stroke. Defaults to 1.
          */
-        open var miter: Double
+        override var miter: Double
 
         /**
          * A number that represents the rotation of the path in the drawing space, in radians.
          */
-        open var rotation: Double
+        override var rotation: Double
 
         /**
          * A number that represents the uniform scale of the path in the drawing space.
          */
-        open var scale: Double
+        override var scale: Double
 
         /**
          * A Two.Vector that represents x, y translation of the path in the drawing space.
          */
-        open var translation: Vector
+        override var translation: Vector
 
         /**
          * A reference to the Two.Group that contains this instance.
          */
-        open var parent: Group
+        override var parent: Group
 
         /**
          * A Two.Utils.Collection of Two.Anchors that is two-way databound. Individual vertices may be manipulated.
@@ -354,12 +380,12 @@ open external class Two (params: TwoConstructionParams /* null */) {
         /**
          * Returns a new instance of a Two.Path with the same settings.
          */
-        fun clone(): Path
+        override fun clone(): Path
 
         /**
          * Anchors all vertices around the centroid of the group.
          */
-        fun center()
+        override fun center()
 
         /**
          * Adds the instance to a Two.Group.
@@ -381,12 +407,12 @@ open external class Two (params: TwoConstructionParams /* null */) {
         /**
          * Removes the fill
          */
-        fun noFill()
+        override fun noFill()
 
         /**
          * Removes the stroke
          */
-        fun noStroke()
+        override fun noStroke()
 
         /**
          * If curved goes through the vertices and calculates the curve. If not, then goes through the vertices and
@@ -489,95 +515,95 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  If you are constructing groups this way instead of two.makeGroup(), then don't forget to add the group to the
      *  instance's scene, two.add(group).
      */
-    open class Group {
+    open class Group : TwoRenderable {
         /**
          * The id of the group. In the svg renderer this is the same number as the id attribute given to the
          * corresponding node. i.e:
          * if group.id = 5 then document.querySelector('#two-' + group.id) will return the corresponding node.
          */
-        open var id: String
+        override var id: String
 
         /**
          *A string representing the color for the stroke of all child shapes. Use strictly for setting. All valid css
          * representations of color are accepted.
          */
-        open var stroke: String
+        override var stroke: String
 
         /**
          * A string representing the color for the area of all child shapes. Use strictly for setting. All valid css
          * representations of color are accepted.
          */
-        open var fill: String
+        override var fill: String
 
         /**
          * A number representing the thickness of all child shapes' strokes. Use strictly for setting.
          * Must be a positive number.
          */
-        open var linewidth: Double
+        override var linewidth: Double
 
         /**
          * A number representing the opacity of all child shapes. Use strictly for setting. Must be a number 0-1.
          */
-        open var opactiy: Double
+        override var opactiy: Double
 
         /**
          * A string representing the type of stroke cap to render for all child shapes. Use strictly for setting.
          * All applicable values can be found on the w3c spec. Defaults to "round".
          */
-        open var cap: String
+        override var cap: String
 
         /**
          * A string representing the type of stroke join to render for all child shapes. Use strictly for setting.
          * All applicable values can be found on the w3c spec. Defaults to "round".
          */
-        open var join: String
+        override var join: String
 
         /**
          * A number representing the miter limit for the stroke of all child objects. Use strictly for setting.
          * Defaults to 1.
          */
-        open var miter: Double
+        override var miter: Double
 
         /**
          * A number that represents the rotation of the group in the drawing space, in radians.
          */
-        open var rotation: Double
+        override var rotation: Double
 
         /**
          * A number that represents the uniform scale of the group in the drawing space.
          */
-        open var scale: Double
+        override var scale: Double
 
         /**
          * A Two.Vector that represents x, y translation of the group in the drawing space.
          */
-        open var translation: Vector
+        override var translation: Vector
 
         /**
          * A map of all the children of the group.
          */
-        open var children: Array<Any>
+        var children: Array<Any>
 
         /**
          * A reference to the Two.Group that contains this instance.
          */
-        open var parent: Group
+        override var parent: Group
 
         /**
          * A reference to the Two.Path that masks the content within the group. Automatically sets the referenced
          * Two.Path.clip to true.
          */
-        open var mask: Path
+        var mask: Path
 
         /**
          * Returns a new instance of a Two.Group with the same settings.
          */
-        fun clone(): Group
+        override fun clone(): Group
 
         /**
          * Anchors all children around the centroid of the group.
          */
-        fun center()
+        override fun center()
 
         /**
          * Adds the instance to a Two.Group. In many ways the inverse of two.add(object).
@@ -601,17 +627,17 @@ open external class Two (params: TwoConstructionParams /* null */) {
          * of the path. Pass true if you're interested in the shallow positioning, i.e in the space directly affecting
          * the object and not where it is nested.
          */
-        fun getBoundingClientRect(shallow: Boolean):BoundingRect
+        override fun getBoundingClientRect(shallow: Boolean):BoundingRect
 
         /**
          * Remove the fill from all children of the group.
          */
-        fun noFill()
+        override fun noFill()
 
         /**
          * Remove the stroke from all children of the group.
          */
-        fun noStroke()
+        override fun noStroke()
     }
 
     /**
