@@ -81,3 +81,15 @@ val compileTestKotiln = tasks.getByName("compileTestKotlin2Js") {
         sourceMapEmbedSources = "always"
     }
 }
+
+/**
+ * Github pages can be configured to serve static content out of the 'docs' folder
+ * So this task copies build artifacts there
+ */
+val publish = tasks.create("githubPagesPublish", Sync::class.java) {
+    dependsOn(tasks.getByName("bundle"))
+
+    from("build/bundle")
+    from("src/main/web")
+    into("docs")
+}
