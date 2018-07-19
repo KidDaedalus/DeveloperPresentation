@@ -45,17 +45,20 @@ class TimelineBuilder(val two: Two = Application.two) {
     /**
      * Quick way to create several stages of text
      */
-    fun slide(vararg lines: String) {
+    fun slide(title: String, vararg lines: String) {
+        val titleHeading = SlideTitle(title)
+        two.add(titleHeading)
+        stage(titleHeading.appear())
         val vectorizedText = lines.map {
-            Two.Text(it, x = 0.0, y = 0.0, styles = null)
+            SlideText(it)
         }
         vectorizedText.forEachIndexed { i, line ->
-            line.translation.y = (i + 1) * 20.0
+            line.translation.y = (i + 3) * 50.0
             two.add(line)
             stage(line.appear(100L))
             pause()
         }
-        stage( vectorizedText.disappear(100L) )
+        stage( vectorizedText.disappear(100L), titleHeading.disappear(100L) )
     }
 
     fun build(): AnimationTimeline {

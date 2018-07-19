@@ -2,14 +2,8 @@ package com.github.kiddaedalus.presentation
 
 import com.github.kiddaedalus.presentation.Application.Companion.two
 import kotlinx.coroutines.experimental.launch
-import kotlinx.html.dom.append
-import kotlinx.html.dom.create
-import kotlinx.html.id
-import kotlinx.html.js.div
-import kotlinx.html.style
 import org.two.js.Two
 import org.two.js.TwoConstructionParams
-import org.two.js.TwoRenderable
 import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.document
 import kotlin.browser.window
@@ -29,14 +23,16 @@ fun main(vararg args: String) {
     val body = document.body!!
     body.style.background = Color.white.asHex
 
-    // Create the vector art & shapes that comprise this presentation
+    // Create the vector art & shapes that together comprise this presentation
     val controls = ControlBar(0.0, 0.0)
     val tableau = Tableau(two.width/2,150.0, 40.0 )
     val stageCounter = Two.Text("~", 0.0, 0.0, null )
     val leftMargin = two.makeRectangle(0.0, 0.0, 20.0, two.height).apply { fill = Color.skyBlue.asRgba; noStroke() }
     val rightMargin = two.makeRectangle(two.width, 0.0, 20.0, two.height).apply { fill = Color.skyBlue.asRgba; noStroke() }
 
-    //val titleBanner = Two.Text("Hello World")
+    val titleBanner = Heading("Hello Software")
+    val titleBannerSubtext = SubHeading(
+            "a brief primer on getting hired")
 
 
     // Setup a timeline of animations performed on the shapes
@@ -44,7 +40,16 @@ fun main(vararg args: String) {
         listener {
             stageCounter.value = "${it.currentStageIndex + 1}/${it.size}"
         }
-        slide("Hello (to the) World (of software development)")
+        stage(titleBanner.appear())
+        stage(
+                //titleBanner.scale(1.0, 2.0),
+                titleBannerSubtext.appear())
+        pause()
+        stage(titleBanner.disappear(), titleBannerSubtext.disappear())
+        slide("Overview",
+                "Me",
+                "Getting Hired",
+                "Got Hired")
         stage(
                 tableau.middlePlus.appear(1500L),
                 tableau.cornerShapes.appear(1000L),
@@ -66,40 +71,47 @@ fun main(vararg args: String) {
     }
     stageCounter.value = "1/${timeline.size}"
     val allShapes = timeline.flatMap { it.shapes }
-    val allText = allShapes.filter { it is Two.Text }
+    val allText = allShapes.filter { it is PresentationText }.map { it as PresentationText }
 
+    /**
+     * Adjust elements into their proper places according to the current size of the animated area
+     */
     fun reposition() {
+        val marginWidth = (two.width * 0.2).clamp(10.0, 200.0)
+        val contentLeftEdge = marginWidth + 30.0
         controls.translation.set(two.width/2, two.height - 25.0)
         tableau.translation.x = two.width/2
         stageCounter.translation.set(two.width/2, two.height - 10.0)
         leftMargin.apply {
-            width = (two.width * 0.2).clamp(10.0, 200.0)
+            width = marginWidth
             height = two.height
             translation.y = two.height/2.0
             translation.x = width/2.0
         }
         rightMargin.apply {
-            width = (two.width * 0.2).clamp(10.0, 200.0)
+            width = marginWidth
             height = two.height
             translation.x = two.width - width/2.0
             translation.y = two.height/2.0
         }
-        allText.forEach {
-            // It would be very convenient to use two.js's getBoundingClientRect() function here
-            // but here's a comment excerpted straight from the source of two.js:
-            //     "TODO: Implement a way to calculate proper bounding boxes of `Two.Text`."
-            val width = it.domElement()?.getBoundingClientRect()?.width ?: 0.0
-            it.translation.x = (two.width * 0.2).clamp(20.0, 200.0) + width/2.0
-            console.log("Setting x position of textual element according to $width")
+        allText.map {
+            when(it) {
+                is Heading -> it.translation.set(two.width/2, two.height/2)
+                is SubHeading -> it.translation.set(two.width/2, two.height/2 + titleBannerSubtext.height() + 10.0)
+                is SlideTitle -> it.translation.set(contentLeftEdge + it.width()/2.0, it.height())
+                is SlideText -> it.translation.x = contentLeftEdge + it.width()/2.0
+            }
         }
     }
 
-    // Add the shapes to the two.js scenegraph and bind events to animate
     two.apply {
+        // Add the shapes to the two.js scenegraph
         appendTo(body)
         add(controls)
         add(stageCounter)
         add(tableau)
+        add(titleBanner)
+        add(titleBannerSubtext)
 
         bind(Two.Events.update) {
             // Keep positions and sizes consistent if the window is resized
@@ -116,12 +128,17 @@ fun main(vararg args: String) {
         play()
     }
 
-
-
     // Setup mouse & keyboard controls
     // Use the keyboard to control progression through the timeline
     fun backButtonPressed() {
         timeline.previousStage()
+        // Keep going back until we get to a break
+        // This is to avoid having to mash the back button to skip over many animations
+        // Or being trapped by an animation that's faster than a mere human button press
+        while(timeline.currentStage !is PausingStage &&
+                timeline.currentStage !is RepeatingStage && timeline.currentStageIndex > 0) {
+            timeline.previousStage()
+        }
         launch {
             controls.backButton.scale(1.2, 1.0, 150L).animate()
         }
@@ -163,5 +180,4 @@ fun main(vararg args: String) {
             else -> { }
         }
     }
-
 }

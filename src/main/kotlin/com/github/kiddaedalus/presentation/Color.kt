@@ -37,7 +37,7 @@ data class Color(val red: Short, val green: Short, val blue: Short, val alpha: D
         val white = Color(255,255,255)
         val black = Color(0,0,0)
         val skyBlue = Color(0,117,226)
-
+        val copperOrange = Color(200,100,50)
     }
 
     fun setAlpha(value: Double) = Color(red, green, blue, value)

@@ -39,7 +39,7 @@ interface Animated {
 /**
  * One second in milliseconds
  */
-const val defaultEffectDuration = 1000L
+const val defaultEffectDuration = 500L
 
 /**
  * Shorthand for a function that renders some visual effect on the basis of a percentage

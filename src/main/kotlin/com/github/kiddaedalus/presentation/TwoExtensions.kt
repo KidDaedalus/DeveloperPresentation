@@ -2,6 +2,7 @@ package com.github.kiddaedalus.presentation
 
 import org.two.js.Two
 import org.two.js.TwoRenderable
+import org.w3c.dom.DOMRect
 import org.w3c.dom.Element
 import kotlin.browser.document
 import kotlin.math.roundToLong
@@ -49,3 +50,14 @@ fun <T : Comparable<T>> T.clamp(min: T, max: T): T =
  * Only expected to work when rendering to SVG as paths on canvas or WebGL don't have DOM elements so far as I know
  */
 fun TwoRenderable.domElement(): Element? = document.getElementById(this.id)
+
+/**
+ * It would be very convenient to use two.js's getBoundingClientRect() function here
+ * but here's a comment excerpted straight from the source of two.js:
+ *    "TODO: Implement a way to calculate proper bounding boxes of `Two.Text`."
+ */
+fun Two.Text.getRealBoundingClientRect(): DOMRect?  =
+    this.domElement()?.getBoundingClientRect()
+
+fun Two.Text.width() : Double = this.getRealBoundingClientRect()?.width ?: 0.0
+fun Two.Text.height() : Double = this.getRealBoundingClientRect()?.height ?: 0.0
