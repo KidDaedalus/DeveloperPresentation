@@ -36,41 +36,95 @@ fun main(vararg args: String) {
 
 
     // Setup a timeline of animations performed on the shapes
-    val timeline = timeline {
+    val presentation = timeline {
         listener {
             stageCounter.value = "${it.currentStageIndex + 1}/${it.size}"
         }
         stage(titleBanner.appear())
-        stage(
-                //titleBanner.scale(1.0, 2.0),
-                titleBannerSubtext.appear())
+        stage(titleBannerSubtext.appear())
         pause()
         stage(titleBanner.disappear(), titleBannerSubtext.disappear())
-        slide("Overview",
-                "Me",
-                "Getting Hired",
-                "Got Hired")
+        slide("Presentation Overview",
+                "Context",
+                "Get Hired",
+                "Got Hired",
+                "Q & A")
+        slide("Context: Me",
+                "4 year Computer Engineering Degree",
+                "8 years industry experience",
+                "Senior Software Engineer",
+                "Interviewed 50+ candidates",
+                "Mentored 4 junior engineers")
+        slide("Disclaimer",
+                "This is my personal experience",
+                "Not representing anyone but myself")
+        slide("Context: You",
+                "Good News!",
+                "You have what it takes!")
+        slide("Context: Employers",
+                "Core Technology Businesses",
+                "Incidentally Technical Businesses",
+                "All Other")
+        slide("Get Hired: The Process",
+                "0. Current employee referral - not all referrals are equal",
+                "1. Recruiters and hiring managers sift resumes",
+                "2. Recruiter conducts interpersonal phone screen",
+                "3. Engineer conducts technical phone screen",
+                "4. The Loop",
+                "5. Hiring Committee meets",
+                "6. Offer")
+        slide("Get Hired: Phone Screen",
+                "Loops are expensive!",
+                "Exists to avoid wasting interviewer time",
+                "1 hour, less complex code problem",
+                "Out of my 15 phone screens: ",
+                " 2/3 passed",
+                " 1/3 failed")
+        slide("Get Hired: The Loop",
+                "4 to 6 interviews, 1 hour each",
+                "Pairs of interviewers: Engineers, Managers, PMs",
+                "whiteboarding, design, testing, communication",
+                "Of my ~40 interviews roughly 1/2 received an offer")
+        slide("Get Hired: Reasons for Rejection",
+        "40% - Problem Solving",
+                "40% - Coding",
+                "20% - Modeling",
+                "15% - Design/Architecture",
+                "10% - Communication",
+                "5% - Testing")
+        slide("Get Hired: Hiring Committee Meets",
+                "Lack of red flags insufficient",
+                "Need affirmative cause to hire",
+                "One strong no-hire -> rejection")
+        slide("Get Hired: So what do you have to offer?",
+                "Future potential",
+                "Enthusiasm for learning",
+                "Coachable",
+                "Likeable",
+                "~6 months before a college hire is net-beneficial")
+        slide("Get Hired: What to ask",
+                "Decision making process?",
+                "Test/quality strategy?",
+                "Engineering toolchain?",
+                "How often is the build broken?",
+                "Code review process?",
+                "Release cadence?")
+        slide("Got Hired: Congrats!",
+                "Do: Learn theory",
+                "Do: Seek mentors",
+                "Do: Invite code review",
+                "Don't: Be afraid to look ignorant",
+                "Don't: Be satisfied with not understanding why it works",
+                "Don't: Follow orders without understanding")
         stage(
                 tableau.middlePlus.appear(1500L),
                 tableau.cornerShapes.appear(1000L),
                 tableau.tertiaryShapes.appear(500L)
         )
-        stage(tableau.cornerShapes.spin())
-        stage(
-                tableau.middlePlus.disappear()
-        )
-        stage(
-                tableau.middlePlus.appear(),
-                tableau.middlePlus.spin(),
-                tableau.cornerShapes.disappear()
-        )
-        stage(
-                tableau.cornerShapes.appear()
-        )
         repeating(tableau.allShapes.spin(0.5, 2000L))
     }
-    stageCounter.value = "1/${timeline.size}"
-    val allShapes = timeline.flatMap { it.shapes }
+    stageCounter.value = "1/${presentation.size}"
+    val allShapes = presentation.flatMap { it.shapes }
     val allText = allShapes.filter { it is PresentationText }.map { it as PresentationText }
 
     /**
@@ -117,7 +171,7 @@ fun main(vararg args: String) {
             // Keep positions and sizes consistent if the window is resized
             // This involves redundant computation every frame... but this is a glorified powerpoint so good enough
             reposition()
-            timeline.update()
+            presentation.update()
         }
 
         allShapes.map {
@@ -131,26 +185,26 @@ fun main(vararg args: String) {
     // Setup mouse & keyboard controls
     // Use the keyboard to control progression through the timeline
     fun backButtonPressed() {
-        timeline.previousStage()
+        presentation.previousStage()
         // Keep going back until we get to a break
         // This is to avoid having to mash the back button to skip over many animations
         // Or being trapped by an animation that's faster than a mere human button press
-        while(timeline.currentStage !is PausingStage &&
-                timeline.currentStage !is RepeatingStage && timeline.currentStageIndex > 0) {
-            timeline.previousStage()
+        while(presentation.currentStage !is PausingStage &&
+                presentation.currentStage !is RepeatingStage && presentation.currentStageIndex > 0) {
+            presentation.previousStage()
         }
         launch {
             controls.backButton.scale(1.2, 1.0, 150L).animate()
         }
     }
     fun forwardButtonPressed() {
-        timeline.advanceStage()
+        presentation.advanceStage()
         launch {
             controls.forwardButton.scale(1.2, 1.0, 150L).animate()
         }
     }
     fun playPauseButtonPressed() {
-        timeline.pause = !timeline.pause
+        presentation.pause = !presentation.pause
         launch {
             controls.playPauseButton.scale(1.2, 1.0, 150L).animate()
         }
