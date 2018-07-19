@@ -455,7 +455,10 @@ open external class Two (params: TwoConstructionParams /* null */) {
      *  A rectangle takes a set of x, y coordinates as its origin (the center of the rectangle by default) and width,
      *  height parameters to define the width and height of the rectangle.
      */
-    open class Rectangle(x: Double, y: Double, width: Double, height: Double): Path
+    open class Rectangle(x: Double, y: Double, width: Double, height: Double): Path {
+        var width: Double
+        var height: Double
+    }
 
     /**
      * This is a class for creating a rounded rectangle in two.js. It inherits from Two.Path, so it has all the same

@@ -26,40 +26,25 @@ class Application {
 
 fun main(vararg args: String) {
     // Configure the DOM
-    val leftMargin = document.create.div {id = "leftMargin"}.apply {
-        style.background = Color.skyBlue.asHex
-        style.height = "100%"
-        style.width = "20%"
-        style.cssFloat = "left"
-    }
-    val contentArea = document.create.div { id = "contentArea"}.apply {
-        style.height = "100%"
-        style.width = "60%"
-        style.cssFloat = "left"
-    }
-    val rightMargin = document.create.div { id = "rightMargin" }.apply {
-        style.background = Color.skyBlue.asHex
-        style.height = "100%"
-        style.width = "20%"
-        style.cssFloat = "left"
-    }
-
-    val body = document.body!!.apply {
-        style.background = Color.white.asHex
-        append(leftMargin,contentArea,rightMargin)
-    }
+    val body = document.body!!
+    body.style.background = Color.white.asHex
 
     // Create the vector art & shapes that comprise this presentation
-    val controls = ControlBar(two.width/2, two.height - 25.0)
+    val controls = ControlBar(0.0, 0.0)
     val tableau = Tableau(two.width/2,150.0, 40.0 )
-    val stageCounter = Two.Text("~", two.width/2, two.height -10.0, null )
+    val stageCounter = Two.Text("~", 0.0, 0.0, null )
+    val leftMargin = two.makeRectangle(0.0, 0.0, 20.0, two.height).apply { fill = Color.skyBlue.asRgba; noStroke() }
+    val rightMargin = two.makeRectangle(two.width, 0.0, 20.0, two.height).apply { fill = Color.skyBlue.asRgba; noStroke() }
+
+    //val titleBanner = Two.Text("Hello World")
+
 
     // Setup a timeline of animations performed on the shapes
     val timeline = timeline {
         listener {
             stageCounter.value = "${it.currentStageIndex + 1}/${it.size}"
         }
-        slide("Hello", "World")
+        slide("Hello (to the) World (of software development)")
         stage(
                 tableau.middlePlus.appear(1500L),
                 tableau.cornerShapes.appear(1000L),
@@ -81,34 +66,57 @@ fun main(vararg args: String) {
     }
     stageCounter.value = "1/${timeline.size}"
     val allShapes = timeline.flatMap { it.shapes }
+    val allText = allShapes.filter { it is Two.Text }
+
+    fun reposition() {
+        controls.translation.set(two.width/2, two.height - 25.0)
+        tableau.translation.x = two.width/2
+        stageCounter.translation.set(two.width/2, two.height - 10.0)
+        leftMargin.apply {
+            width = (two.width * 0.2).clamp(10.0, 200.0)
+            height = two.height
+            translation.y = two.height/2.0
+            translation.x = width/2.0
+        }
+        rightMargin.apply {
+            width = (two.width * 0.2).clamp(10.0, 200.0)
+            height = two.height
+            translation.x = two.width - width/2.0
+            translation.y = two.height/2.0
+        }
+        allText.forEach {
+            // It would be very convenient to use two.js's getBoundingClientRect() function here
+            // but here's a comment excerpted straight from the source of two.js:
+            //     "TODO: Implement a way to calculate proper bounding boxes of `Two.Text`."
+            val width = it.domElement()?.getBoundingClientRect()?.width ?: 0.0
+            it.translation.x = (two.width * 0.2).clamp(20.0, 200.0) + width/2.0
+            console.log("Setting x position of textual element according to $width")
+        }
+    }
 
     // Add the shapes to the two.js scenegraph and bind events to animate
     two.apply {
-        appendTo(contentArea)
+        appendTo(body)
         add(controls)
         add(stageCounter)
         add(tableau)
 
-        // Add all the shapes used in the presentation to the scenegraph
-        allShapes.map {
-            // Make them invisible to start with until something makes the shape appear
-            it.scale = 0.0
-            //add(it)
-        }
-
         bind(Two.Events.update) {
+            // Keep positions and sizes consistent if the window is resized
+            // This involves redundant computation every frame... but this is a glorified powerpoint so good enough
+            reposition()
             timeline.update()
         }
 
-        bind(Two.Events.resize) {
-            // Keep things horizontally centered
-            tableau.translation.x = two.width/2
-            controls.translation.set(two.width/2, two.height - 25.0)
-            stageCounter.translation.set(two.width/2, two.height - 10.0)
+        allShapes.map {
+            // Make presentation shapes invisible to start with until something makes the shape appear
+            it.scale = 0.0
         }
 
         play()
     }
+
+
 
     // Setup mouse & keyboard controls
     // Use the keyboard to control progression through the timeline

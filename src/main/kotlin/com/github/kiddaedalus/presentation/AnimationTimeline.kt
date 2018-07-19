@@ -47,9 +47,7 @@ class TimelineBuilder(val two: Two = Application.two) {
      */
     fun slide(vararg lines: String) {
         val vectorizedText = lines.map {
-            Two.Text(it, x = 20.0, y = 0.0, styles = null).apply {
-                svgOpacity = 0.0
-            }
+            Two.Text(it, x = 0.0, y = 0.0, styles = null)
         }
         vectorizedText.forEachIndexed { i, line ->
             line.translation.y = (i + 1) * 20.0
